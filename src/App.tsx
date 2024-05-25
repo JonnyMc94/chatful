@@ -4,26 +4,32 @@ import "./App.css";
 import MessageHolder from "./components/MessageHolder";
 import MessageBox from './components/MessageBox'
 import SearchBar from './components/SearchBar'
+import ChatCard from './components/ChatCard'
 
 function App() {
-  const message = {
-    id: 1,
-    text: "Hello, World! This my first message and Im just testing if the message box will expand with more text.",
-    sender: {
-      id: 2,
-      username: "user1",
-      email: "",
-    },
-    time: "18.05",
-    date: new Date(),
-    avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-  };
+  
+
+  const user = {
+    id : 2,
+    username: "Harlei",
+    email: 'harle_email@gmail.com',
+    avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
+    messages: [{
+      senderID: 2,
+      recipientID: 1,
+      recipient: 'Jonathan',
+      text: "Hello, Good Morning. This is an extra long string to ensure the formatting is correct",
+      date: new Date()
+    }],
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         {/* <MessageHolder message={message} /> */}
         {/* <MessageBox /> */}
-        <SearchBar />
+        {/* <SearchBar /> */}
+        <ChatCard chatCardUser={user}/>
       </header>
     </div>
   );

@@ -1,6 +1,10 @@
-import { MessageHolderProps } from '../common/types'
+import { MessageHolderProps, User } from '../common/types'
 
-const MessageHolder = ({ message }: MessageHolderProps) => {
+interface MessageHolderPropsWithSender extends MessageHolderProps {
+  sender: User;
+}
+
+const MessageHolder = ({ message, sender }: MessageHolderPropsWithSender) => {
 
   const time = message.date.toLocaleTimeString([], {
     hour: "2-digit",
@@ -8,11 +12,11 @@ const MessageHolder = ({ message }: MessageHolderProps) => {
   });
 
   const loggedInUserID: number = 1; 
-  const userID: number = message.user.id;
+  const senderID: number = sender.id;
 
   return (
     <>
-    {userID === loggedInUserID && (
+    {senderID === loggedInUserID && (
       <div className="flex justify-end mb-4 cursor-pointer">
         <div className="flex flex-col max-w-96 bg-indigo-500 text-white rounded-lg p-2 gap-1">
           <p className="text-left">{message.text}</p>
@@ -20,19 +24,19 @@ const MessageHolder = ({ message }: MessageHolderProps) => {
         </div>
         <div className="w-9 h-9 rounded-full flex items-center justify-center ml-2">
           <img
-            src={message.user.avatar}
-            alt="My Avatar"
+            src={sender.avatar}
+            alt="Sender's Avatar"
             className="w-8 h-8 rounded-full"
           />
         </div>
       </div>
     )}
-    {userID !== loggedInUserID && (
-      <div className="flex justify-end mb-4 cursor-pointer">
+    {senderID !== loggedInUserID && (
+      <div className="flex justify-start mb-4 cursor-pointer">
         <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
           <img
-            src={message.user.avatar}
-            alt="My Avatar"
+            src={sender.avatar}
+            alt="Sender's Avatar"
             className="w-8 h-8 rounded-full"
           />
         </div>

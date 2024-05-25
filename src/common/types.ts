@@ -1,10 +1,9 @@
 export interface Message {
-    id: number;
+    senderID: number;
+    recipientID: number;
+    recipient: string;
     text: string;
-    user: User;
-    time: string;
     date: Date;
-    
   }
   
   export interface User {
@@ -12,8 +11,10 @@ export interface Message {
     username: string;
     email: string;
     avatar: string;
+    messages?: Message[];
   }
   
   export interface MessageHolderProps {
     message: Message;
+    sender: User;
   }
