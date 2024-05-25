@@ -2,6 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import MessageHolder from "./components/MessageHolder";
+import MessageBox from './components/MessageBox'
 
 function App() {
   const message = {
@@ -19,7 +20,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <MessageHolder message={message} />
+        {/* <MessageHolder message={message} /> */}
+        <MessageBox />
       </header>
     </div>
   );
