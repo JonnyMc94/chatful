@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import MessageHolder from "./components/MessageHolder";
 import MessageBox from './components/MessageBox'
+import SearchBar from './components/SearchBar'
 
 function App() {
   const message = {
@@ -21,7 +22,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         {/* <MessageHolder message={message} /> */}
-        <MessageBox />
+        {/* <MessageBox /> */}
+        <SearchBar />
       </header>
     </div>
   );
