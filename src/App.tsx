@@ -5,6 +5,7 @@ import MessageHolder from "./components/MessageHolder";
 import MessageBox from './components/MessageBox'
 import SearchBar from './components/SearchBar'
 import ChatCard from './components/ChatCard'
+import ConfirmationModal from "./pages/ConfirmationModal";
 
 function App() {
   
@@ -29,7 +30,8 @@ function App() {
         {/* <MessageHolder message={message} /> */}
         {/* <MessageBox /> */}
         {/* <SearchBar /> */}
-        <ChatCard chatCardUser={user}/>
+        {/* <ChatCard chatCardUser={user}/> */}
+        {/* <ConfirmationModal /> */}
       </header>
     </div>
   );
