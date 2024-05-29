@@ -6,6 +6,7 @@ import MessageBox from './components/MessageBox'
 import SearchBar from './components/SearchBar'
 import ChatCard from './components/ChatCard'
 import ConfirmationModal from "./pages/ConfirmationModal";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   
@@ -32,6 +33,7 @@ function App() {
         {/* <SearchBar /> */}
         {/* <ChatCard chatCardUser={user}/> */}
         {/* <ConfirmationModal /> */}
+        <LoginPage />
       </header>
     </div>
   );
