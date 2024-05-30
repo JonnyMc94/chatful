@@ -5,24 +5,32 @@ import MessageHolder from "./components/MessageHolder";
 import MessageBox from './components/MessageBox'
 import SearchBar from './components/SearchBar'
 import ChatCard from './components/ChatCard'
-import ConfirmationModal from "./pages/ConfirmationModal";
+import ConfirmationModal from "./modals/ConfirmationModal";
 import LoginPage from "./pages/LoginPage";
 
 function App() {
   
 
-  const user = {
-    id : 2,
-    username: "Harlei",
-    email: 'harle_email@gmail.com',
-    avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
-    messages: [{
-      senderID: 2,
-      recipientID: 1,
-      recipient: 'Jonathan',
-      text: "Hello, Good Morning. This is an extra long string to ensure the formatting is correct",
-      date: new Date()
-    }],
+  // const user = {
+  //   id : 2,
+  //   username: "Harlei",
+  //   email: 'harle_email@gmail.com',
+  //   avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
+  //   messages: [{
+  //     senderID: 2,
+  //     recipientID: 1,
+  //     recipient: 'Jonathan',
+  //     text: "Hello, Good Morning. This is an extra long string to ensure the formatting is correct",
+  //     date: new Date()
+  //   }],
+  // }
+
+  const modalProps = {
+    title: "Confirm Action",
+    message: "Are you sure you want to confirm action?",
+    onConfirm: () => console.log("Confirming action..."),
+    onCancel: () => console.log("Cancelled action"),
+    isLogout: true
   }
 
   return (
@@ -32,8 +40,8 @@ function App() {
         {/* <MessageBox /> */}
         {/* <SearchBar /> */}
         {/* <ChatCard chatCardUser={user}/> */}
-        {/* <ConfirmationModal /> */}
-        <LoginPage />
+        <ConfirmationModal {...modalProps}/>
+        {/* <LoginPage /> */}
       </header>
     </div>
   );
