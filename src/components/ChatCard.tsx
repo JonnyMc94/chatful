@@ -36,8 +36,16 @@ const ChatCard = ({chatCardUser}: ChatCardProps) => {
     });
   }, []);
 
+  const truncateText = (text: string, limit: number) => {
+    const words = text.split(' ');
+    if (words.length > limit) {
+      return words.slice(0, limit).join(' ') + '...';
+    }
+    return text;
+  };
+
   return (
-    <div className="flex flex-row items-center w-full sm:w-[85%] lg:w-[30%] mt-4 mb-4 lg:m-10 shadow-2xl md:transition-all md:duration-700 md:hover:scale-110 bg-blue-400 p-4">
+    <div className="flex flex-row items-center w-full shadow-2xl bg-blue-400 p-4">
       <div className="rounded-full flex items-center justify-center ml-2">
         <img src={avatar} alt="My Avatar" className="w-16 h-16 rounded-full" />
       </div>
@@ -48,8 +56,8 @@ const ChatCard = ({chatCardUser}: ChatCardProps) => {
           </div>
           <span className="text-base text-slate-800">{time}</span>
         </div>
-        <p className="text-xl text-left lg:text-sm text-slate-800">
-          {lastMessage}
+        <p className="text-xl text-left lg:text-sm text-slate-800 line-clamp-1">
+        {truncateText(lastMessage, 10)}
         </p>
       </div>
     </div>

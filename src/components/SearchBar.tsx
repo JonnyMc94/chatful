@@ -14,7 +14,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="w-full">
       <form onSubmit={onSubmit}>
         <div className="relative">
           <input
@@ -22,7 +22,7 @@ const SearchBar = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             type="text"
             id="search-term"
-            className="w-full placeholder:pl-6 border h-12 shadow p-4 pr-14 text-wrap rounded-full text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
+            className="w-full placeholder:pl-6 border h-12 shadow p-4 pr-14 text-wrap text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
             placeholder="Search here..."
             required
           />

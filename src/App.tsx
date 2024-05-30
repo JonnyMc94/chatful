@@ -7,6 +7,7 @@ import SearchBar from './components/SearchBar'
 import ChatCard from './components/ChatCard'
 import ConfirmationModal from "./modals/ConfirmationModal";
 import LoginPage from "./pages/LoginPage";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   
@@ -40,8 +41,9 @@ function App() {
         {/* <MessageBox /> */}
         {/* <SearchBar /> */}
         {/* <ChatCard chatCardUser={user}/> */}
-        <ConfirmationModal {...modalProps}/>
+        {/* <ConfirmationModal {...modalProps}/> */}
         {/* <LoginPage /> */}
+        <Sidebar />
       </header>
     </div>
   );
