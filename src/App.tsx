@@ -8,6 +8,7 @@ import ChatCard from './components/ChatCard'
 import ConfirmationModal from "./modals/ConfirmationModal";
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbar";
 
 function App() {
   
@@ -43,7 +44,8 @@ function App() {
         {/* <ChatCard chatCardUser={user}/> */}
         {/* <ConfirmationModal {...modalProps}/> */}
         {/* <LoginPage /> */}
-        <Sidebar />
+        {/* <Sidebar /> */}
+        <Navbar />
       </header>
     </div>
   );
