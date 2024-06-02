@@ -57,7 +57,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="flex flex-col h-[70vh] bg-slate-800 w-[30%] bg-whatsapp">
+    <aside className="fixed top-22 left-0 w-70 h-full flex flex-col bg-slate-800 bg-whatsapp z-10">
       <div className='w-full'>
         <SearchBar />
       </div>
@@ -66,7 +66,7 @@ const Sidebar = () => {
           <ChatCard key={user.id} chatCardUser={user} />
         ))}
       </div>
-    </div>
+    </aside>
   );
 };
 
