@@ -1,8 +1,6 @@
 import { MessageHolderProps, User } from '../common/types'
+import { MessageHolderPropsWithSender } from '../common/types'
 
-interface MessageHolderPropsWithSender extends MessageHolderProps {
-  sender: User;
-}
 
 const MessageHolder = ({ message, sender }: MessageHolderPropsWithSender) => {
 
@@ -18,8 +16,8 @@ const MessageHolder = ({ message, sender }: MessageHolderPropsWithSender) => {
     <>
     {senderID === loggedInUserID && (
       <div className="flex justify-end mb-4 cursor-pointer">
-        <div className="flex flex-col max-w-96 bg-indigo-500 text-white rounded-lg p-2 gap-1">
-          <p className="text-left">{message.text}</p>
+        <div className="flex flex-col bg-indigo-500 text-white rounded-lg p-2 gap-1">
+          <p className="text-left text-lg">{message.text}</p>
           <p className="flex text-xs justify-end">{time}</p>
         </div>
         <div className="w-9 h-9 rounded-full flex items-center justify-center ml-2">
@@ -40,8 +38,8 @@ const MessageHolder = ({ message, sender }: MessageHolderPropsWithSender) => {
             className="w-8 h-8 rounded-full"
           />
         </div>
-        <div className="flex flex-col max-w-96 bg-indigo-500 text-white rounded-lg p-2 gap-1">
-          <p className="text-left">{message.text}</p>
+        <div className="flex flex-col bg-indigo-500 text-white rounded-lg p-2 gap-1">
+          <p className="text-left text-lg">{message.text}</p>
           <p className="flex text-xs justify-end">{time}</p>
         </div>
       </div>

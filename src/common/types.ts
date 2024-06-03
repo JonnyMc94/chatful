@@ -19,6 +19,10 @@ export interface MessageHolderProps {
   sender: User;
 }
 
+export interface MessageHolderPropsWithSender extends MessageHolderProps {
+  sender: User;
+}
+
 export interface ModalProps {
   title: string;
   message: string;

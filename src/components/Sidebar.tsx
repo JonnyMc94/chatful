@@ -57,16 +57,16 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="fixed top-22 left-0 w-70 h-full flex flex-col bg-slate-800 bg-whatsapp z-10">
-      <div className='w-full'>
-        <SearchBar />
-      </div>
-      <div className="w-full">
-        {users.map((user) => (
-          <ChatCard key={user.id} chatCardUser={user} />
-        ))}
-      </div>
-    </aside>
+<aside className="w-70 h-full flex flex-col bg-slate-800 bg-whatsapp">
+  <div className='w-full'>
+    <SearchBar />
+  </div>
+  <div className="w-full">
+    {users.map((user) => (
+      <ChatCard key={user.id} chatCardUser={user} />
+    ))}
+  </div>
+</aside>
   );
 };
 
