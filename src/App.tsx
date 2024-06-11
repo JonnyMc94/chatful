@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   
@@ -47,7 +48,8 @@ function App() {
         {/* <LoginPage /> */}
         {/* <Sidebar />
         <Navbar /> */}
-        <ChatPage />
+        {/* <ChatPage /> */}
+        <ProfilePage />
       </header>
     </div>
   );

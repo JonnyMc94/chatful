@@ -29,4 +29,5 @@ export interface ModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   isLogout: boolean;
+  showModal: boolean;
 }
