@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 function SettingsPage() {
   const [username, setUsername] = useState("");
@@ -8,7 +10,9 @@ function SettingsPage() {
     setUsername(event.target.value);
   };
 
-  const handleNotificationsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNotificationsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNotificationsEnabled(event.target.checked);
   };
 
@@ -19,39 +23,56 @@ function SettingsPage() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Settings</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-            Username
-          </label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            value={username}
-            onChange={handleUsernameChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
+    <div className="flex h-screen w-screen bg-whatsapp">
+      <Navbar />
+      <div className="flex flex-grow mt-22">
+        <Sidebar />
+        <div className="flex flex-col items-center justify-center space-y-4 w-full bg-white p-10 rounded-lg m-5 shadow-lg">
+          <h1 className="text-4xl font-bold mb-4 text-slate-600">Settings</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="m-6 flex flex-row gap-8">
+              <label
+                htmlFor="username"
+                className="mt-2 text-lg font-medium text-gray-700"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                value={username}
+                onChange={handleUsernameChange}
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+            <div className="m-6">
+              <div className="flex flex-row items-center jutify-center gap-8">
+              <label
+                htmlFor="notifications"
+                className="text-lg font-medium text-gray-700"
+              >
+                Enable notifications
+              </label>
+              <input
+                id="notifications"
+                name="notifications"
+                type="checkbox"
+                checked={notificationsEnabled}
+                onChange={handleNotificationsChange}
+                className="h-6 w-6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+            </div>
+            <button
+              type="submit"
+              className="m-4 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200"
+            >
+              Save
+            </button>
+          </form>
         </div>
-        <div className="mb-4">
-          <label htmlFor="notifications" className="block text-sm font-medium text-gray-700">
-            Enable notifications
-          </label>
-          <input
-            id="notifications"
-            name="notifications"
-            type="checkbox"
-            checked={notificationsEnabled}
-            onChange={handleNotificationsChange}
-            className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200">
-          Save
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
