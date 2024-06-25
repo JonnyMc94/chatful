@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Message, User } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
+import React from "react";
 
 interface ChatCardProps {
   chatCardUser: User;

@@ -1,6 +1,7 @@
 import { MessageHolderProps, User } from '../common/types'
 import MessageHolder from "./MessageHolder";
 import MessageBox from "./MessageBox";
+import React from 'react';
 
 
 const ChatContent = () => {

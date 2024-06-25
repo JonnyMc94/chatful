@@ -2,7 +2,6 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
 import { User } from "../common/types";
-import WhatsAppBG from "../public/whatsapp-web.png";
 
 const Sidebar = () => {
   const users: User[] = [

@@ -1,4 +1,4 @@
-import { MessageHolderProps, User } from '../common/types'
+import React from 'react';
 import { MessageHolderPropsWithSender } from '../common/types'
 
 
