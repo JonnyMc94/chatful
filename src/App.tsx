@@ -30,11 +30,12 @@ function App() {
   // }
 
   const modalProps = {
-    title: "Confirm Action",
-    message: "Are you sure you want to confirm action?",
+    title: "Logout Confirmation",
+    message: "Are you sure you want to logout?",
     onConfirm: () => console.log("Confirming action..."),
     onCancel: () => console.log("Cancelled action"),
     isLogout: true,
+    showModal: true,
   };
 
   return (
@@ -44,6 +45,8 @@ function App() {
           {/* <Sidebar />
           <Navbar /> */}
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/logout" element={<ConfirmationModal {...modalProps} />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<ChatPage />} />
