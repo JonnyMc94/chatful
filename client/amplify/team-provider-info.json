@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chatful-dev-49f33-authRole",
+      "UnauthRoleArn": "arn:aws:iam::859845176296:role/amplify-chatful-dev-49f33-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::859845176296:role/amplify-chatful-dev-49f33-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-chatful-dev-49f33-deployment",
+      "UnauthRoleName": "amplify-chatful-dev-49f33-unauthRole",
+      "StackName": "amplify-chatful-dev-49f33",
+      "StackId": "arn:aws:cloudformation:us-west-1:859845176296:stack/amplify-chatful-dev-49f33/e7de5800-3975-11ef-b397-020f1dd2931f",
+      "AmplifyAppId": "d16n2fpeed62zb"
+    },
+    "categories": {
+      "auth": {
+        "chatful4f1a0c96": {}
+      }
+    }
+  }
+}

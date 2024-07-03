@@ -3,6 +3,7 @@
     "@types/pg": "^8.11.6"
   },
   "dependencies": {
+    "@aws-amplify/auth": "^6.3.7",
     "aws-amplify": "^6.3.8",
     "pg": "^8.12.0"
   }
