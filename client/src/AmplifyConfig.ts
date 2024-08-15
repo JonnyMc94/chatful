@@ -1,4 +1,4 @@
 import { Amplify } from 'aws-amplify';
-import awsconfig from './aws-exports';
+const awsconfig = require('./aws-exports');
 
 Amplify.configure(awsconfig);

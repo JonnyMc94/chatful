@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },// Add a comma here
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "src/**/*"]
 }
