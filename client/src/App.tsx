@@ -11,35 +11,35 @@ import Amplify from '@aws-amplify/core';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-          await signInWithRedirect();
-        }
-        await fetchAuthSession({ forceRefresh: true });
-        const user = await getCurrentUser();
-        console.log('Authenticated user:', user); // Inspect the user object
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('No authenticated user:', error);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     try {
+  //       const urlParams = new URLSearchParams(window.location.search);
+  //       const code = urlParams.get('code');
+  //       if (code) {
+  //         await signInWithRedirect();
+  //       }
+  //       await fetchAuthSession({ forceRefresh: true });
+  //       const user = await getCurrentUser();
+  //       console.log('Authenticated user:', user); // Inspect the user object
+  //       setIsAuthenticated(true);
+  //     } catch (error) {
+  //       console.error('No authenticated user:', error);
+  //       setIsAuthenticated(false);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    checkAuthStatus();
-  }, []);
+  //   checkAuthStatus();
+  // }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   const modalProps = {
     title: "Logout Confirmation",
