@@ -29,6 +29,8 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
 router.post("/message", async (req: Request, res: Response) => {
   try {
     const newMessage = await Message.create(req.body.user_id, req.body.message);
+    const io = req.app.get("socketio");
+    io.emit("newMessage", newMessage);
     res.json(newMessage);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
@@ -41,6 +43,8 @@ router.put("/message/:id", async (req: Request, res: Response) => {
       Number(req.params.id),
       req.body.message
     );
+    const io = req.app.get("socketio");
+    io.emit("updateMessage", updatedMessage);
     res.json(updatedMessage);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
@@ -50,6 +54,8 @@ router.put("/message/:id", async (req: Request, res: Response) => {
 router.delete("/message/:id", async (req: Request, res: Response) => {
   try {
     const deletedMessage = await Message.delete(Number(req.params.id));
+    const io = req.app.get("socketio");
+    io.emit("deleteMessage", deletedMessage);
     res.json(deletedMessage);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
