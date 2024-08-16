@@ -17,7 +17,11 @@ function App() {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        await signInWithRedirect();
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+          await signInWithRedirect();
+        }
         await fetchAuthSession({ forceRefresh: true });
         const user = await getCurrentUser();
         console.log('Authenticated user:', user); // Inspect the user object
@@ -51,9 +55,13 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<ConfirmationModal {...modalProps} />} />
-        <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
+        {/* Remove authentication check for now */}
+        {/* <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
-        <Route path="/" element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} />
+        <Route path="/" element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />} /> */}
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/" element={<ChatPage />} />
       </Routes>
     </Router>
   );

@@ -19,8 +19,9 @@ const LoginPage = () => {
   };
   const handleLogin = () => {
     // Redirect to Cognito Hosted UI
-    signIn();
     window.location.href = cognitoHostedUIUrl;
+    signIn();
+    
   };
 
   return (

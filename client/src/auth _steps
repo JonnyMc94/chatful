@@ -1,0 +1,59 @@
+.
+├── src
+│   ├── index.ts               # Entry point of your app
+│   ├── app.ts                 # Express app setup
+│   ├── config                 # Configuration related things (env variables, etc.)
+│   ├── routes                 # All routes are defined here
+│   │   ├── index.ts           # Main file for routes
+│   │   ├── chat.ts            # Routes related to chat
+│   │   └── auth.ts            # Routes related to authentication
+│   ├── controllers            # Logic related to routes
+│   │   ├── chatController.ts
+│   │   └── authController.ts
+│   ├── middleware             # Custom middleware (e.g., error handling, validation)
+│   ├── services               # Business logic (e.g., chat service, auth service)
+│   │   ├── chatService.ts
+│   │   └── authService.ts
+│   ├── utils                  # Utility functions and classes
+│   ├── models                 # Database models
+│   ├── sockets                # Socket.io events and logic
+│   └── tests                  # Test files
+├── package.json               # List of package dependencies and scripts
+├── tsconfig.json              # TypeScript configuration
+├── .env                       # Environment variables
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+└── README.md                  # Project description and instruction
+
+Set up Routes: In the routes directory, you'll define the endpoints that your API will expose. Each route will correspond to a specific operation, 
+such as creating a new chat message or logging in a user. Each route will also be associated with a specific HTTP method (GET, POST, PUT, DELETE, etc.). 
+You'll need to define these routes in separate files (chat.ts for chat-related routes and auth.ts for authentication-related routes) and then import them 
+in your main index.ts file. Each route will call a specific function in the corresponding controller.
+
+Set up Controllers: In the controllers directory, you'll define the logic that gets executed when a specific route is hit. This typically involves calling 
+the appropriate service function, handling any errors that might occur, and sending a response back to the client. You'll need to create separate controller 
+files for chat and authentication (chatController.ts and authController.ts). Each controller function will receive request and response objects, and it will 
+use the request object to get the data it needs to pass to the service function.
+
+Set up Services: In the services directory, you'll define your business logic. This is where you'll interact with your models to perform operations like creating 
+a new chat message in the database or checking if a user's login credentials are correct. You'll need to create separate service files for chat and authentication 
+(chatService.ts and authService.ts). Each service function will receive data from the controller, perform the necessary operations (like querying the database), and 
+return the result.
+
+Set up Models: In the models directory, you'll define your data models. These models represent the data in your application and define what fields each piece of data 
+should have. For example, a User model might have fields for username, password, and email. You'll need to create a model file for each entity in your application.
+
+Set up Middleware: In the middleware directory, you'll define any custom middleware functions your application needs. Middleware functions are functions that have 
+access to the request object, the response object, and the next function in the application's request-response cycle. They can be used to modify the request or response, 
+or to end the request-response cycle.
+
+Set up Tests: In the tests directory, you'll write tests for your routes, controllers, services, and models. Writing tests can help you catch bugs before they become 
+problems, and can also make it easier to add new features in the future.
+
+Set up Configuration: In the config directory, you'll manage your configuration settings. This could include setting up your database connection, managing environment 
+variables, or configuring your authentication strategy.
+
+Set up Authentication: You'll need to set up authentication for your application. This will involve integrating with a service like AWS Cognito, and could also 
+involve setting up middleware to check if a user is authenticated before allowing them to access certain routes.
+
+Set up Redis/ElastiCache: You'll need to set up a Redis or ElastiCache instance for your application. This could be used for a variety of purposes, such as caching 
+data to improve performance, or storing session data.
