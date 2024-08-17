@@ -1,61 +1,56 @@
-import { MessageHolderProps, User } from '../common/types'
+import { MessageHolderProps, User } from '../common/types';
 import MessageHolder from "./MessageHolder";
 import MessageBox from "./MessageBox";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
+const socket = io('http://localhost:3000'); // Adjust the URL to match your server's address and port
 
 const ChatContent = () => {
-  const dummyMessages = [
-    {
-      message: {
-        senderID: 1,
-        recipientID: 2,
-        recipient: "User2",
-        text: "Hello, how are you?",
-        date: new Date(),
-      },
-      sender: {
-        id: 1,
-        username: "User1",
-        email: "user1@example.com",
-        avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
-      },
-    },
-    {
-      message: {
-        senderID: 2,
-        recipientID: 1,
-        recipient: "User1",
-        text: "I'm good, thanks! How about you?",
-        date: new Date(),
-      },
-      sender: {
-        id: 2,
-        username: "User2",
-        email: "user2@example.com",
-        avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
-      },
-    },
-    {
-      message: {
-        senderID: 1,
-        recipientID: 2,
-        recipient: "User2",
-        text: "I'm doing well, thank you!",
-        date: new Date(),
-      },
-      sender: {
-        id: 1,
-        username: "User1",
-        email: "user1@example.com",
-        avatar: "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato",
-      },
-    },
-  ];
+  const [messages, setMessages] = useState<MessageHolderProps[]>([]);
+
+  useEffect(() => {
+    // Listen for new messages
+    socket.on('newMessage', (message: MessageHolderProps) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    // Listen for updated messages
+    socket.on('updateMessage', (updatedMessage: MessageHolderProps) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.message.senderID === updatedMessage.message.senderID &&
+          msg.message.date === updatedMessage.message.date
+            ? updatedMessage
+            : msg
+        )
+      );
+    });
+
+    // Listen for deleted messages
+    socket.on('deleteMessage', (deletedMessage: MessageHolderProps) => {
+      setMessages((prevMessages) =>
+        prevMessages.filter(
+          (msg) =>
+            !(
+              msg.message.senderID === deletedMessage.message.senderID &&
+              msg.message.date === deletedMessage.message.date
+            )
+        )
+      );
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off('newMessage');
+      socket.off('updateMessage');
+      socket.off('deleteMessage');
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-stretch flex-grow overflow-y-auto p-6">
-      {dummyMessages.map((data, index) => (
+      {messages.map((data, index) => (
         <MessageHolder key={index} message={data.message} sender={data.sender} />
       ))}
       <div className="mt-auto">
