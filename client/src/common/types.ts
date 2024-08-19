@@ -14,6 +14,10 @@ export interface User {
   messages?: Message[];
 }
 
+export interface ChatCardProps {
+  chatCardUser: User;
+}
+
 export interface MessageHolderProps {
   message: Message;
   sender: User;

@@ -1,12 +1,10 @@
 // User, Avatar, last message sent, time it was sent
 import { useState, useEffect } from "react";
-import { Message, User } from "../common/types";
+import { Message, User, ChatCardProps } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
 import React from "react";
 
-interface ChatCardProps {
-  chatCardUser: User;
-}
+
 
 const ChatCard = ({ chatCardUser }: ChatCardProps) => {
   const loggedInUserID: number = 1;
