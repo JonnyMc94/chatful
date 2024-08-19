@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import Message from "../models/message"; // Import the Message model
 
 const chatSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
@@ -9,18 +10,36 @@ const chatSocket = (io: Server) => {
     });
 
     // Handle new message event
-    socket.on("newMessage", (message) => {
-      io.emit("newMessage", message);
+    socket.on("newMessage", async (data) => {
+      try {
+        const { userId, message } = data;
+        const newMessage = await Message.create(userId, message);
+        io.emit("newMessage", newMessage);
+      } catch (error) {
+        console.error("Error creating message:", error);
+      }
     });
 
     // Handle update message event
-    socket.on("updateMessage", (message) => {
-      io.emit("updateMessage", message);
+    socket.on("updateMessage", async (data) => {
+      try {
+        const { id, message } = data;
+        const updatedMessage = await Message.update(id, message);
+        io.emit("updateMessage", updatedMessage);
+      } catch (error) {
+        console.error("Error updating message:", error);
+      }
     });
 
     // Handle delete message event
-    socket.on("deleteMessage", (message) => {
-      io.emit("deleteMessage", message);
+    socket.on("deleteMessage", async (data) => {
+      try {
+        const { id } = data;
+        const deletedMessage = await Message.delete(id);
+        io.emit("deleteMessage", deletedMessage);
+      } catch (error) {
+        console.error("Error deleting message:", error);
+      }
     });
   });
 };
