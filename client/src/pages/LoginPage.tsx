@@ -1,26 +1,15 @@
 import React from "react";
-import { signInWithRedirect } from "aws-amplify/auth";
 
 const LoginPage = () => {
-  // Cognito Hosted UI URL
-  const cognitoHostedUIUrl =
-    "https://chatful.auth.ca-central-1.amazoncognito.com/login" +
-    "?response_type=code" + // Authorization Code Grant
-    "&client_id=4guuv66r3diepagonjr23bdj8q" + // App Client ID
-    "&redirect_uri=http://localhost:4000/" + // Callback URL
-    "&scope=email+openid+phone"; // Scopes
 
   const signIn = async (): Promise<void> => {
     try {
-      await signInWithRedirect();
     } catch (err) {
       console.log(err);
     }
   };
   const handleLogin = () => {
-    // Redirect to Cognito Hosted UI
-    window.location.href = cognitoHostedUIUrl;
-    signIn();
+    
     
   };
 
