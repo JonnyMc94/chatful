@@ -10,6 +10,8 @@
     "aws-amplify": "^6.3.8",
     "npx": "^10.2.2",
     "pg": "^8.12.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3",
     "socket.io-client": "^4.7.5"
   }
 }
