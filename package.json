@@ -1,17 +1,28 @@
 {
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.4.1",
     "@types/pg": "^8.11.6",
+    "@types/sequelize": "^4.28.20",
     "@types/socket.io-client": "^3.0.0",
     "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.3.8",
     "@aws-sdk/client-cognito-identity-provider": "^3.613.0",
+    "@types/axios": "^0.14.0",
     "aws-amplify": "^6.3.8",
+    "axios": "^1.7.4",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "npx": "^10.2.2",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
     "socket.io-client": "^4.7.5"
   }
 }
