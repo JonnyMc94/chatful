@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Message, ChatCardProps } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
 import { handleNewMessage } from "../utils/messageHandlers";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 const ChatCard = ({ chatCardUser }: ChatCardProps) => {
   const { username, avatar, messages } = chatCardUser;
@@ -40,15 +40,17 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
     setChatData(initialChatData);
   }, [initialChatData]);
 
-  const socketRef = useRef(io("http://localhost:3000")); // Adjust the URL as needed
+  const socketRef = useRef<Socket | null>(null);
 
-  const handleNewMessageCallback = useCallback(
-    (message: Message) => handleNewMessage(message, loggedInUserID, chatCardUser, setChatData),
-    [loggedInUserID, chatCardUser]
-  );
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io("http://localhost:3000"); // Adjust the URL as needed
+    }
 
-  const handleDeleteMessage = useCallback(
-    (message: Message) => {
+    const socket = socketRef.current;
+
+    const handleNewMessageCallback = (message: Message) => handleNewMessage(message, loggedInUserID, chatCardUser, setChatData);
+    const handleDeleteMessage = (message: Message) => {
       if (message.recipientID === loggedInUserID) {
         setChatData({
           lastMessage: "",
@@ -57,12 +59,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
           avatar: avatar,
         });
       }
-    },
-    [loggedInUserID, username, avatar]
-  );
-
-  useEffect(() => {
-    const socket = socketRef.current;
+    };
 
     socket.on("newMessage", handleNewMessageCallback);
     socket.on("updateMessage", handleNewMessageCallback);
@@ -71,7 +68,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
     return () => {
       socket.disconnect();
     };
-  }, [handleNewMessageCallback, handleDeleteMessage]);
+  }, [loggedInUserID, chatCardUser, username, avatar]);
 
   return (
     <div className="flex flex-row items-center w-full shadow-2xl bg-blue-400 p-4">
