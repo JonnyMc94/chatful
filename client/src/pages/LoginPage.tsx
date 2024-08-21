@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const signIn = async (): Promise<void> => {
     try {
-      const response = await axios.post("/login", { username, password });
+      const response = await axios.post("http://localhost:3000/auth/login", { username, password });
       const { token } = response.data;
       // Store the token in localStorage or context
       localStorage.setItem("token", token);
       console.log("Login successful");
+      navigate("/");
     } catch (err) {
       console.log("Error logging in:", err);
     }

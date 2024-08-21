@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const signUp = async (): Promise<void> => {
     try {
-      const response = await axios.post("http://localhost:4000/auth/register", { username, password });
+      const response = await axios.post("http://localhost:3000/auth/register", { username, password });
       console.log("Signup successful:", response.data);
+      navigate("http://localhost:4000/login");
     } catch (err) {
       console.log("Error signing up:", err);
     }
