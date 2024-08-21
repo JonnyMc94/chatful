@@ -1,7 +1,7 @@
 import "./App.css";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage"; // Import SignupPage
+import SignupPage from "./pages/SignupPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
@@ -17,9 +17,9 @@ function App() {
     const checkAuthStatus = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (token) {
+        if (token != null) {
           // Optionally, you can verify the token with the backend
-          const response = await axios.get("/verify-token", {
+          const response = await axios.get("http://localhost:3000/auth/verify-token", {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.status === 200) {
@@ -53,7 +53,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} /> {/* Add SignupPage route */}
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/logout" element={<ConfirmationModal {...modalProps} />} />
         <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
