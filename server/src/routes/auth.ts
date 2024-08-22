@@ -30,4 +30,17 @@ router.post('/login', async (req: Request<{}, {}, LoginRequestBody>, res: Respon
   }
 });
 
+// Verify Token Endpoint
+router.get('/verify-token', (req: Request, res: Response) => {
+  const token = req.headers['authorization']?.replace('Bearer ', '');
+  if (!token) return res.status(401).send('Access denied');
+
+  try {
+    const decoded = jwt.verify(token, 'your_jwt_secret') as { userId: number };
+    res.status(200).json({ message: 'Token is valid', userId: decoded.userId });
+  } catch (error) {
+    res.status(400).send('Invalid token');
+  }
+});
+
 export default router;
