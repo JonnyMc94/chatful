@@ -13,7 +13,7 @@ const chatSocket = (io: Server) => {
     socket.on("newMessage", async (data) => {
       try {
         const { userId, message } = data;
-        const newMessage = await Message.create(userId, message);
+        const newMessage = await Message.createMessage(userId, message);
         io.emit("newMessage", newMessage);
       } catch (error) {
         console.error("Error creating message:", error);
@@ -24,7 +24,7 @@ const chatSocket = (io: Server) => {
     socket.on("updateMessage", async (data) => {
       try {
         const { id, message } = data;
-        const updatedMessage = await Message.update(id, message);
+        const updatedMessage = await Message.updateMessage(id, message);
         io.emit("updateMessage", updatedMessage);
       } catch (error) {
         console.error("Error updating message:", error);
@@ -35,7 +35,7 @@ const chatSocket = (io: Server) => {
     socket.on("deleteMessage", async (data) => {
       try {
         const { id } = data;
-        const deletedMessage = await Message.delete(id);
+        const deletedMessage = await Message.deleteMessage(id);
         io.emit("deleteMessage", deletedMessage);
       } catch (error) {
         console.error("Error deleting message:", error);
