@@ -1,47 +1,78 @@
-import pool from "../db";
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import sequelize from '../sequelize'; // Import the Sequelize instance
+import { User } from './user';
 
-class Message {
-  constructor(public id: number, public userId: number, public message: string, public timestamp: Date) {}
+@Table
+class Message extends Model {
+  @Column({
+    type: DataType.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  })
+  public id!: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  public userId!: number;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  public message!: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  public timestamp!: Date;
 
   static async findById(userId: number, id: number) {
-    const result = await pool.query(
-      `SELECT * FROM messages WHERE user_id = $1 AND id = $2`,
-      [userId, id]
-    );
-    return result.rows[0];
+    const result = await Message.findOne({
+      where: { userId, id },
+    });
+    return result;
   }
 
   static async findByUserId(userId: number) {
-    const result = await pool.query(
-      `SELECT * FROM messages WHERE user_id = $1`,
-      [userId]
-    );
-    return result.rows;
+    const result = await Message.findAll({
+      where: { userId },
+    });
+    return result;
   }
 
-  static async create(userId: number, message: string) {
-    const result = await pool.query(
-      `INSERT INTO messages (user_id, message, timestamp) VALUES ($1, $2, cast('now' as timestamp)) RETURNING *`,
-      [userId, message]
-    );
-    return result.rows[0];
+  static async createMessage(userId: number, message: string) {
+    const result = await Message.create({
+      userId,
+      message,
+      timestamp: new Date(),
+    });
+    return result;
   }
 
-  static async update(id: number, message: string) {
-    const result = await pool.query(
-      `UPDATE messages SET message = $1 WHERE id = $2 RETURNING *`,
-      [message, id]
+  static async updateMessage(id: number, message: string) {
+    const result = await Message.update(
+      { message },
+      {
+        where: { id },
+        returning: true,
+      }
     );
-    return result.rows[0];
+    return result[1][0];
   }
 
-  static async delete(id: number) {
-    const result = await pool.query(
-      `DELETE FROM messages WHERE id = $1 RETURNING *`,
-      [id]
-    );
-    return result.rows[0];
+  static async deleteMessage(id: number) {
+    const message = await Message.findByPk(id);
+    if (message) {
+      await message.destroy();
+    }
+    return message;
   }
 }
+
+Message.belongsTo(User, { foreignKey: 'userId' });
 
 export default Message;
