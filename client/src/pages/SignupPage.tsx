@@ -11,7 +11,7 @@ const SignupPage = () => {
     try {
       const response = await axios.post("http://localhost:3000/auth/register", { username, password });
       console.log("Signup successful:", response.data);
-      navigate("http://localhost:4000/login");
+      navigate("/login");
     } catch (err) {
       console.log("Error signing up:", err);
     }
