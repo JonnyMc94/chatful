@@ -8,7 +8,7 @@ router.get("/message/:userID/:id", async (req: Request, res: Response) => {
   const messageId = Number(req.params.id);
 
   try {
-    const message = await Message.findById(userId, messageId);
+    const message = await Message.findOne({ where: { userId, id: messageId } });
     res.json(message);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
@@ -19,7 +19,7 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
   const userId = Number(req.params.userID);
 
   try {
-    const messages = await Message.findByUserId(userId);
+    const messages = await Message.findAll({ where: { userId } });
     res.json(messages);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
@@ -28,7 +28,7 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
 
 router.post("/message", async (req: Request, res: Response) => {
   try {
-    const newMessage = await Message.create(req.body.user_id, req.body.message);
+    const newMessage = await Message.create({ userId: req.body.user_id, message: req.body.message });
     const io = req.app.get("socketio");
     io.emit("newMessage", newMessage);
     res.json(newMessage);
@@ -39,10 +39,11 @@ router.post("/message", async (req: Request, res: Response) => {
 
 router.put("/message/:id", async (req: Request, res: Response) => {
   try {
-    const updatedMessage = await Message.update(
-      Number(req.params.id),
-      req.body.message
+    const [updatedCount, updatedMessages] = await Message.update(
+      { message: req.body.message },
+      { where: { id: Number(req.params.id) }, returning: true }
     );
+    const updatedMessage = updatedMessages[0];
     const io = req.app.get("socketio");
     io.emit("updateMessage", updatedMessage);
     res.json(updatedMessage);
@@ -53,10 +54,10 @@ router.put("/message/:id", async (req: Request, res: Response) => {
 
 router.delete("/message/:id", async (req: Request, res: Response) => {
   try {
-    const deletedMessage = await Message.delete(Number(req.params.id));
+    const deletedMessage = await Message.destroy({ where: { id: Number(req.params.id) } });
     const io = req.app.get("socketio");
-    io.emit("deleteMessage", deletedMessage);
-    res.json(deletedMessage);
+    io.emit("deleteMessage", { id: Number(req.params.id) });
+    res.json({ id: Number(req.params.id) });
   } catch (err: any) {
     res.status(404).json({ message: err.message });
   }
