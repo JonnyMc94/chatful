@@ -3,11 +3,10 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import chatRoutes from "./routes/chat";
-import authRoutes from "./routes/auth"; // Import the auth routes
-import sequelize from './sequelize'; // Import the Sequelize instance
+import authRoutes from "./routes/auth"; 
+import sequelize from './sequelize'; 
 
-import chatSocket from "./sockets/chatSocket"; // Import the WebSocket handlers
-
+import chatSocket from "./sockets/chatSocket"; 
 const app = express();
 const server = http.createServer(app); // Initialize HTTP server first
 

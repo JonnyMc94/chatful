@@ -4,7 +4,7 @@ import MessageBox from "./MessageBox";
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3000'); // Adjust the URL to match your server's address and port
+const socket = io('http://localhost:3000'); 
 
 const ChatContent = () => {
   const [messages, setMessages] = useState<MessageHolderProps[]>([]);
