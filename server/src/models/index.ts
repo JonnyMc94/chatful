@@ -1,13 +1,8 @@
-const { Sequelize } = require('sequelize');
+import sequelize from '../sequelize';
+import { User } from './user';
+import { Message } from './message';
 
-const sequelize = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'postgres',
-});
+sequelize.addModels([User, Message]);
+console.log("Models added")
 
-const User = require('./User')(sequelize);
-const Message = require('./Message')(sequelize);
-
-sequelize.sync();
-
-module.exports = { sequelize, User, Message };
+export { sequelize, User, Message };

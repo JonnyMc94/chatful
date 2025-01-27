@@ -19,8 +19,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var Message_1;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Message = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const user_1 = require("./user");
+console.log('Initializing Message model');
 let Message = Message_1 = class Message extends sequelize_typescript_1.Model {
     static findById(userId, id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -67,6 +69,7 @@ let Message = Message_1 = class Message extends sequelize_typescript_1.Model {
         });
     }
 };
+exports.Message = Message;
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
@@ -76,6 +79,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Message.prototype, "id", void 0);
 __decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => user_1.User),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
         allowNull: false,
@@ -97,8 +101,11 @@ __decorate([
     }),
     __metadata("design:type", Date)
 ], Message.prototype, "timestamp", void 0);
-Message = Message_1 = __decorate([
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_1.User),
+    __metadata("design:type", user_1.User)
+], Message.prototype, "user", void 0);
+exports.Message = Message = Message_1 = __decorate([
     sequelize_typescript_1.Table
 ], Message);
-Message.belongsTo(user_1.User, { foreignKey: 'userId' });
-exports.default = Message;
+console.log('Message model initialized');

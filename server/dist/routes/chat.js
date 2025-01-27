@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const message_1 = __importDefault(require("../models/message"));
+const message_1 = require("../models/message");
 const router = express_1.default.Router();
 router.get("/message/:userID/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = Number(req.params.userID);
     const messageId = Number(req.params.id);
     try {
-        const message = yield message_1.default.findOne({ where: { userId, id: messageId } });
+        const message = yield message_1.Message.findOne({ where: { userId, id: messageId } });
         res.json(message);
     }
     catch (err) {
@@ -29,7 +29,7 @@ router.get("/message/:userID/:id", (req, res) => __awaiter(void 0, void 0, void 
 router.get("/messages/:userID", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = Number(req.params.userID);
     try {
-        const messages = yield message_1.default.findAll({ where: { userId } });
+        const messages = yield message_1.Message.findAll({ where: { userId } });
         res.json(messages);
     }
     catch (err) {
@@ -38,7 +38,7 @@ router.get("/messages/:userID", (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 router.post("/message", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newMessage = yield message_1.default.create({ userId: req.body.user_id, message: req.body.message });
+        const newMessage = yield message_1.Message.create({ userId: req.body.user_id, message: req.body.message });
         const io = req.app.get("socketio");
         io.emit("newMessage", newMessage);
         res.json(newMessage);
@@ -49,7 +49,7 @@ router.post("/message", (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 router.put("/message/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const [updatedCount, updatedMessages] = yield message_1.default.update({ message: req.body.message }, { where: { id: Number(req.params.id) }, returning: true });
+        const [updatedCount, updatedMessages] = yield message_1.Message.update({ message: req.body.message }, { where: { id: Number(req.params.id) }, returning: true });
         const updatedMessage = updatedMessages[0];
         const io = req.app.get("socketio");
         io.emit("updateMessage", updatedMessage);
@@ -61,7 +61,7 @@ router.put("/message/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 router.delete("/message/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deletedMessage = yield message_1.default.destroy({ where: { id: Number(req.params.id) } });
+        const deletedMessage = yield message_1.Message.destroy({ where: { id: Number(req.params.id) } });
         const io = req.app.get("socketio");
         io.emit("deleteMessage", { id: Number(req.params.id) });
         res.json({ id: Number(req.params.id) });

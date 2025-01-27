@@ -8,9 +8,9 @@ const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const chat_1 = __importDefault(require("./routes/chat"));
-const auth_1 = __importDefault(require("./routes/auth")); // Import the auth routes
-const sequelize_1 = __importDefault(require("./sequelize")); // Import the Sequelize instance
-const chatSocket_1 = __importDefault(require("./sockets/chatSocket")); // Import the WebSocket handlers
+const auth_1 = __importDefault(require("./routes/auth"));
+const sequelize_1 = __importDefault(require("./sequelize"));
+const chatSocket_1 = __importDefault(require("./sockets/chatSocket"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app); // Initialize HTTP server first
 // Initialize Socket.IO server after HTTP server

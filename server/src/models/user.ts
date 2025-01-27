@@ -1,6 +1,8 @@
 import { Table, Column, Model, DataType, BeforeCreate } from 'sequelize-typescript';
 import bcrypt from 'bcryptjs';
 import { CreationOptional } from 'sequelize';
+import { Message } from './message';
+
 
 @Table
 export class User extends Model<User> {

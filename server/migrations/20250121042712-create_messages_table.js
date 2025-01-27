@@ -1,6 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    console.log('Running migration: create-message');
     await queryInterface.createTable('Messages', {
       id: {
         allowNull: false,
@@ -32,8 +33,11 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       }
     });
+    console.log('Migration completed: create-message');
   },
   down: async (queryInterface, Sequelize) => {
+    console.log('Reverting migration: create-message');
     await queryInterface.dropTable('Messages');
+    console.log('Migration reverted: create-message');
   }
 };

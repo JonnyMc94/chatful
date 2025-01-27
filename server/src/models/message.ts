@@ -1,9 +1,10 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
-import sequelize from '../sequelize'; // Import the Sequelize instance
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { User } from './user';
 
+console.log('Initializing Message model');
+
 @Table
-class Message extends Model {
+export class Message extends Model {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -11,6 +12,7 @@ class Message extends Model {
   })
   public id!: number;
 
+  @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -29,6 +31,9 @@ class Message extends Model {
     defaultValue: DataType.NOW,
   })
   public timestamp!: Date;
+
+  @BelongsTo(() => User)
+  public user!: User;
 
   static async findById(userId: number, id: number) {
     const result = await Message.findOne({
@@ -72,7 +77,3 @@ class Message extends Model {
     return message;
   }
 }
-
-Message.belongsTo(User, { foreignKey: 'userId' });
-
-export default Message;

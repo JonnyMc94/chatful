@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import Message from "../models/message"; // Import the Message model
+import { Message } from "../models/message"; // Import the Message model
 
 const chatSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {

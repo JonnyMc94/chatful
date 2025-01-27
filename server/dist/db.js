@@ -3,17 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dbConfig = void 0;
-const pg_1 = require("pg");
+exports.sequelize = exports.dbConfig = void 0;
+const sequelize_1 = require("sequelize");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.local' });
 const dbConfig = {
-    host: process.env.HOST,
-    port: Number(process.env.DB_PORT),
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
+    host: process.env.DB_HOST || 'localhost',
+    port: Number(process.env.DB_PORT || '5432'),
+    username: process.env.DB_USER || 'jonnymcnamee',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'chatfuldb',
+    dialect: 'postgres'
 };
 exports.dbConfig = dbConfig;
-const pool = new pg_1.Pool(dbConfig);
-exports.default = pool;
+const sequelize = new sequelize_1.Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
+    port: dbConfig.port,
+});
+exports.sequelize = sequelize;

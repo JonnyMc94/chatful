@@ -1,6 +1,6 @@
 import express from "express";
 import { Response, Request } from "express";
-import Message from "../models/message";
+import { Message } from "../models/message";
 const router = express.Router();
 
 router.get("/message/:userID/:id", async (req: Request, res: Response) => {

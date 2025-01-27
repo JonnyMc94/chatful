@@ -8,11 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const message_1 = __importDefault(require("../models/message")); // Import the Message model
+const message_1 = require("../models/message"); // Import the Message model
 const chatSocket = (io) => {
     io.on("connection", (socket) => {
         console.log("a user connected");
@@ -23,7 +20,7 @@ const chatSocket = (io) => {
         socket.on("newMessage", (data) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const { userId, message } = data;
-                const newMessage = yield message_1.default.createMessage(userId, message);
+                const newMessage = yield message_1.Message.createMessage(userId, message);
                 io.emit("newMessage", newMessage);
             }
             catch (error) {
@@ -34,7 +31,7 @@ const chatSocket = (io) => {
         socket.on("updateMessage", (data) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const { id, message } = data;
-                const updatedMessage = yield message_1.default.updateMessage(id, message);
+                const updatedMessage = yield message_1.Message.updateMessage(id, message);
                 io.emit("updateMessage", updatedMessage);
             }
             catch (error) {
@@ -45,7 +42,7 @@ const chatSocket = (io) => {
         socket.on("deleteMessage", (data) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const { id } = data;
-                const deletedMessage = yield message_1.default.deleteMessage(id);
+                const deletedMessage = yield message_1.Message.deleteMessage(id);
                 io.emit("deleteMessage", deletedMessage);
             }
             catch (error) {
