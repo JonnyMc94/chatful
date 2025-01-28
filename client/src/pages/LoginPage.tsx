@@ -20,7 +20,8 @@ const LoginPage = () => {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = (event: React.FormEvent) => {
+    event.preventDefault()
     signIn();
   };
 

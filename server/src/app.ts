@@ -21,7 +21,7 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:4000", // Allow requests from your frontend
+  origin: "http://localhost:4000", 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
@@ -29,7 +29,7 @@ app.use(express.json());
 
 // Routes
 app.use("/chat", chatRoutes);
-app.use("/auth", authRoutes); // Use the auth routes
+app.use("/auth", authRoutes); 
 
 // Attach the WebSocket server to the Express app
 app.set("socketio", io);
