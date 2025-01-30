@@ -14,6 +14,12 @@ export interface User {
   messages?: Message[];
 }
 
+export interface UserSelectionModalProps {
+  users: User[];
+  onSelectUser: (user: User) => void;
+  onClose: () => void;
+}
+
 export interface ChatCardProps {
   chatCardUser: User;
 }
