@@ -17,7 +17,14 @@ export class Message extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  public userId!: number;
+  public senderId!: number;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  public recipientId!: number;
 
   @Column({
     type: DataType.STRING,
@@ -32,26 +39,30 @@ export class Message extends Model {
   })
   public timestamp!: Date;
 
-  @BelongsTo(() => User)
-  public user!: User;
+  @BelongsTo(() => User, 'senderId')
+  public sender!: User;
 
-  static async findById(userId: number, id: number) {
+  @BelongsTo(() => User, 'recipientId')
+  public recipient!: User;
+
+  static async findById(senderId: number, id: number) {
     const result = await Message.findOne({
-      where: { userId, id },
+      where: { senderId, id },
     });
     return result;
   }
 
   static async findByUserId(userId: number) {
     const result = await Message.findAll({
-      where: { userId },
+      where: { senderId: userId },
     });
     return result;
   }
 
-  static async createMessage(userId: number, message: string) {
+  static async createMessage(senderId: number, recipientId: number, message: string) {
     const result = await Message.create({
-      userId,
+      senderId,
+      recipientId,
       message,
       timestamp: new Date(),
     });

@@ -12,8 +12,8 @@ const chatSocket = (io: Server) => {
     // Handle new message event
     socket.on("newMessage", async (data) => {
       try {
-        const { userId, message } = data;
-        const newMessage = await Message.createMessage(userId, message);
+        const { senderId,  recipientId, message } = data;
+        const newMessage = await Message.createMessage(senderId, recipientId, message);
         io.emit("newMessage", newMessage);
       } catch (error) {
         console.error("Error creating message:", error);
