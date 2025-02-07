@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, UserSelectionModalProps } from '../common/types'
+import { UserSelectionModalProps } from '../common/types'
 
 const UserSelectionModal = ({ users, onSelectUser, onClose }: UserSelectionModalProps) => {
   return (

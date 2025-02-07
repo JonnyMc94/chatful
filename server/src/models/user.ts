@@ -35,4 +35,8 @@ export class User extends Model<User> {
   async comparePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
+
+  static async getAllUsers(): Promise<User[]> {
+    return await User.findAll();
+  }
 }

@@ -4,6 +4,7 @@ import http from "http";
 import { Server } from "socket.io";
 import chatRoutes from "./routes/chat";
 import authRoutes from "./routes/auth"; 
+import userRoutes from "./routes/user"; 
 import sequelize from './sequelize'; 
 
 import chatSocket from "./sockets/chatSocket"; 
@@ -30,6 +31,7 @@ app.use(express.json());
 // Routes
 app.use("/chat", chatRoutes);
 app.use("/auth", authRoutes); 
+app.use("/user", userRoutes)
 
 // Attach the WebSocket server to the Express app
 app.set("socketio", io);

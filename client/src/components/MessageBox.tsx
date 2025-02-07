@@ -1,13 +1,34 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
+import UserSelectionModal from '../modals/UserSelectionModal';
+import { User } from '../common/types'
+import axios from "axios";
+
 
 const socket = io("http://localhost:3000");
 
 const MessageBox = () => {
   const [message, setMessage] = useState<string>("");
+  // eslint-disable-next-line
   const [messages, setMessages] = useState<string[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [displayUserModal, setDisplayUserModal] = useState<boolean>(false);
 
   useEffect(() => {
+    // Fetch users from the server
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/user/users');
+        console.log(response)
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+
     // Log when connected to the server
     socket.on("connect", () => {
       console.log("Connected to server");
@@ -26,36 +47,39 @@ const MessageBox = () => {
     };
   }, []);
 
-  const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    socket.emit("message", message); // Send the message to the server
+  const handleSendMessage = () => {
+    if (!selectedUser) {
+      setDisplayUserModal(true);
+    } else {
+      socket.emit("message", { recipientId: selectedUser.id, message });
+      setMessage(""); // Clear the input field
+    }
+  };
+
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user);
+    setDisplayUserModal(false);
+    // Proceed with sending the message
+    socket.emit("message", { recipientId: user.id, message });
     setMessage(""); // Clear the input field
   };
 
   return (
-    <div className="flex items-center">
+    <div>
       <input
+        type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        type="text"
-        id="message_input"
-        className="flex bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Enter text here..."
-        aria-label="Message input"
-        required
+        placeholder="Type a message"
       />
-      <button
-        className="bg-indigo-500 text-white px-4 py-2 rounded-2xl ml-2"
-        onClick={onClick}
-        aria-label="Send message"
-      >
-        Send
-      </button>
-      <div className="messages">
-        {messages.map((msg, index) => (
-          <div key={index}>{msg}</div>
-        ))}
-      </div>
+      <button onClick={handleSendMessage}>Send</button>
+      {displayUserModal && (
+        <UserSelectionModal
+          users={users}
+          onSelectUser={handleUserSelect}
+          onClose={() => setDisplayUserModal(false)}
+        />
+      )}
     </div>
   );
 };
