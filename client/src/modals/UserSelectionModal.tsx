@@ -3,10 +3,10 @@ import { UserSelectionModalProps } from '../common/types';
 
 const UserSelectionModal = ({ users, onSelectUser, onClose }: UserSelectionModalProps) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white p-6 rounded-md shadow-md">
-        <h2 className="text-lg font-semibold mb-4">Select a User</h2>
-        <ul className="mb-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h2 className="text-xl font-semibold mb-4">Select a User</h2>
+        <ul className="mb-4 max-h-60 overflow-y-auto">
           {users.map(user => (
             <li
               key={user.id}
@@ -17,7 +17,10 @@ const UserSelectionModal = ({ users, onSelectUser, onClose }: UserSelectionModal
             </li>
           ))}
         </ul>
-        <button onClick={onClose} className="p-2 bg-red-500 text-white rounded-md">
+        <button
+          onClick={onClose}
+          className="w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+        >
           Close
         </button>
       </div>
