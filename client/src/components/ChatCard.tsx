@@ -41,7 +41,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
     }
 
     return chatData;
-  }, [messages, loggedInUserID, username, avatar]);
+  }, [chatData, messages, loggedInUserID, username, avatar]);
 
   useEffect(() => {
     setChatData(initialChatData);
