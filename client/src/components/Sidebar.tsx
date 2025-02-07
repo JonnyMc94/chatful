@@ -3,6 +3,8 @@ import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
 import { User } from "../common/types";
 import io from 'socket.io-client';
+import axios from "axios";
+
 
 const socket = io('http://localhost:3000');
 
@@ -13,8 +15,8 @@ const Sidebar = () => {
     // Fetch initial user data
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/users'); // Adjust the URL as needed
-        const data = await response.json();
+        const response = await axios.get('http://localhost:3000/user/users');
+        const data = await response.data;
         setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
