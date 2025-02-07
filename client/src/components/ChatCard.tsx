@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Message, ChatCardProps } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
+import { decodeJWT } from "../utils/decodeJWT"
 import { handleNewMessage } from "../utils/messageHandlers";
 import io, { Socket } from "socket.io-client";
 
+
 const ChatCard = ({ chatCardUser }: ChatCardProps) => {
   const { username, avatar, messages } = chatCardUser;
-  const loggedInUserID: number = 1;
+  const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
   const [chatData, setChatData] = useState({
     lastMessage: "",
     time: "",
     senderName: username,
     avatar: avatar,
   });
+
+  useEffect(() => {
+    const id = decodeJWT()?.userId
+    setLoggedInUserId(id || 0)
+  }, []);
 
   const initialChatData = useMemo(() => {
     if (!messages) return chatData;
