@@ -1,9 +1,11 @@
 export interface Message {
-  senderID: number;
-  recipientID: number;
-  recipient: string;
-  text: string;
-  date: Date;
+  id: number;
+  senderId: number;
+  recipientId: number;
+  message: string;
+  timestamp: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface User {

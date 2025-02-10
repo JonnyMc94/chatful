@@ -2,6 +2,7 @@ import { MessageHolderProps, User } from '../common/types';
 import MessageHolder from "./MessageHolder";
 import MessageBox from "./MessageBox";
 import UserSelectionModal from '../modals/UserSelectionModal';
+import { decodeJWT } from "../utils/decodeJWT"
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import axios from "axios";
@@ -10,6 +11,7 @@ const socket = io('http://localhost:3000');
 
 const ChatContent = () => {
   const [messages, setMessages] = useState<MessageHolderProps[]>([]);
+  const [pendingMessage, setPendingMessage] = useState<string>("")
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [displayUserModal, setDisplayUserModal] = useState<boolean>(false);
@@ -36,8 +38,8 @@ const ChatContent = () => {
     socket.on('updateMessage', (updatedMessage: MessageHolderProps) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
-          msg.message.senderID === updatedMessage.message.senderID &&
-          msg.message.date === updatedMessage.message.date
+          msg.message.senderId === updatedMessage.message.senderId &&
+          msg.message.createdAt === updatedMessage.message.createdAt
             ? updatedMessage
             : msg
         )
@@ -50,8 +52,8 @@ const ChatContent = () => {
         prevMessages.filter(
           (msg) =>
             !(
-              msg.message.senderID === deletedMessage.message.senderID &&
-              msg.message.date === deletedMessage.message.date
+              msg.message.senderId === deletedMessage.message.senderId &&
+              msg.message.createdAt === deletedMessage.message.createdAt
             )
         )
       );
@@ -65,23 +67,45 @@ const ChatContent = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedUser && pendingMessage) {
+      console.log("Sending pending message:", pendingMessage);
+      handleSendMessage(pendingMessage);
+      setPendingMessage("");
+    }
+  }, [selectedUser]);
+
   const handleUserSelect = (user: User) => {
+    console.log("User selected:", user);
     setSelectedUser(user);
     setDisplayUserModal(false);
   };
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     if (!selectedUser) {
+      console.log("No user selected, setting pending message:", message);
+      setPendingMessage(message);
       setDisplayUserModal(true);
     } else {
-      socket.emit("message", { recipientId: selectedUser.id, message });
+      try {
+        console.log("Sending message:", message);
+        const response = await axios.post('http://localhost:3000/chat/message', {
+          senderId: decodeJWT()?.userId,
+          recipientId: selectedUser.id,
+          message: message
+        });
+        console.log("Message sent:", response.data);
+        socket.emit("message", response.data);
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
   return (
     <div className="flex flex-col items-stretch flex-grow overflow-y-auto p-6">
       {messages.map((data, index) => (
-        <MessageHolder key={index} message={data.message} sender={data.sender} />
+        <MessageHolder key={index} message={data.message}/>
       ))}
       <div className="mt-auto">
         <MessageBox onSendMessage={handleSendMessage} />

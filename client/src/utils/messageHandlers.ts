@@ -6,10 +6,10 @@ export const handleNewMessage = (
   chatCardUser: any,
   setChatData: React.Dispatch<React.SetStateAction<any>>
 ) => {
-  if (message.recipientID === loggedInUserID) {
+  if (message.recipientId === loggedInUserID) {
     setChatData({
-      lastMessage: message.text,
-      time: new Date(message.date).toLocaleTimeString([], {
+      lastMessage: message.message,
+      time: new Date(message.createdAt).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       }),

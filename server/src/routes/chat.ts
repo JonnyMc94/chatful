@@ -28,19 +28,23 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
 
 router.post("/message", async (req: Request, res: Response) => {
   try {
-    const newMessage = await Message.create({ userId: req.body.user_id, message: req.body.message });
+    console.log("Received message request:", req.body); // Add logging
+    const { senderId, recipientId, message } = req.body; // Use 'message' as the field name
+    const newMessage = await Message.create({ senderId, recipientId, message, date: new Date() });
+    console.log("New message created:", newMessage); // Add logging
     const io = req.app.get("socketio");
     io.emit("newMessage", newMessage);
     res.json(newMessage);
   } catch (err: any) {
-    res.status(404).json({ message: err.message });
+    console.error("Error saving message:", err); // Add logging
+    res.status(500).json({ message: err.message });
   }
 });
 
 router.put("/message/:id", async (req: Request, res: Response) => {
   try {
     const [updatedCount, updatedMessages] = await Message.update(
-      { message: req.body.message },
+      { message: req.body.message }, // Use 'message' as the field name
       { where: { id: Number(req.params.id) }, returning: true }
     );
     const updatedMessage = updatedMessages[0];
@@ -48,7 +52,7 @@ router.put("/message/:id", async (req: Request, res: Response) => {
     io.emit("updateMessage", updatedMessage);
     res.json(updatedMessage);
   } catch (err: any) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
@@ -59,7 +63,7 @@ router.delete("/message/:id", async (req: Request, res: Response) => {
     io.emit("deleteMessage", { id: Number(req.params.id) });
     res.json({ id: Number(req.params.id) });
   } catch (err: any) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 

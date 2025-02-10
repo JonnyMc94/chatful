@@ -25,13 +25,13 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
     if (!messages) return chatData;
 
     const lastMessage = messages.find(
-      (message) => message.recipientID === loggedInUserID
+      (message) => message.recipientId === loggedInUserID
     );
 
     if (lastMessage) {
       return {
-        lastMessage: lastMessage.text,
-        time: new Date(lastMessage.date).toLocaleTimeString([], {
+        lastMessage: lastMessage.message,
+        time: new Date(lastMessage.createdAt).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         }),
@@ -58,7 +58,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
 
     const handleNewMessageCallback = (message: Message) => handleNewMessage(message, loggedInUserID, chatCardUser, setChatData);
     const handleDeleteMessage = (message: Message) => {
-      if (message.recipientID === loggedInUserID) {
+      if (message.recipientId === loggedInUserID) {
         setChatData({
           lastMessage: "",
           time: "",
@@ -78,7 +78,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
   }, [loggedInUserID, chatCardUser, username, avatar]);
 
   return (
-    <div className="flex flex-row items-center w-full shadow-2xl bg-blue-400 p-4">
+    <div className="flex flex-row items-center w-full shadow-2xl bg-white p-4">
       <div className="rounded-full flex items-center justify-center ml-2">
         <img src={chatData.avatar} alt="My Avatar" className="w-16 h-16 rounded-full" />
       </div>
