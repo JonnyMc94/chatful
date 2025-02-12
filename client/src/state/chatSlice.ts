@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MessageHolderProps } from '../common/types';
+import { Message } from '../common/types';
 
 interface ChatState {
-  messages: MessageHolderProps[];
+  messages: Message[];
   activeChatId: number | null;
 }
 
@@ -15,27 +15,27 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setMessages(state, action: PayloadAction<MessageHolderProps[]>) {
+    setMessages(state, action: PayloadAction<Message[]>) {
       state.messages = action.payload;
     },
-    updateMessage(state, action: PayloadAction<MessageHolderProps>) {
+    updateMessage(state, action: PayloadAction<Message>) {
         state.messages = state.messages.map((msg) =>
-          msg.message.senderId === action.payload.message.senderId &&
-          msg.message.createdAt === action.payload.message.createdAt
+          msg.senderId === action.payload.senderId &&
+          msg.createdAt === action.payload.createdAt
             ? action.payload
             : msg
         );
       },
-    deleteMessage(state, action: PayloadAction<MessageHolderProps>) {
+    deleteMessage(state, action: PayloadAction<Message>) {
         state.messages = state.messages.filter(
           (msg) =>
             !(
-              msg.message.senderId === action.payload.message.senderId &&
-              msg.message.createdAt === action.payload.message.createdAt
+              msg.senderId === action.payload.senderId &&
+              msg.createdAt === action.payload.createdAt
             )
         );
       },
-    addMessage(state, action: PayloadAction<MessageHolderProps>) {
+    addMessage(state, action: PayloadAction<Message>) {
       state.messages.push(action.payload);
     },
     setActiveChat(state, action: PayloadAction<number | null>) {
