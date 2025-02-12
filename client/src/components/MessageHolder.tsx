@@ -1,11 +1,7 @@
 import React from 'react';
 import { Message } from '../common/types';
 
-interface MessageHolderProps {
-  message: Message;
-}
-
-const MessageHolder: React.FC<MessageHolderProps> = ({ message }) => {
+const MessageHolder = ({ message }: { message: Message }) => {
   const { senderId, recipientId, message: text, timestamp } = message;
 
   return (

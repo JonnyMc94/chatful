@@ -26,15 +26,6 @@ export interface ChatCardProps {
   chatCardUser: User;
 }
 
-export interface MessageHolderProps {
-  message: Message;
-  sender: User;
-}
-
-export interface MessageHolderPropsWithSender extends MessageHolderProps {
-  sender: User;
-}
-
 export interface ModalProps {
   title: string;
   message: string;

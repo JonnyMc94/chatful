@@ -4,6 +4,7 @@ import { setUsers } from '../state/userSlice';
 import { RootState }  from '../state/store';
 import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
+import UserSelectionModal from "../modals/UserSelectionModal";
 import { User } from "../common/types";
 import { decodeJWT } from "../utils/decodeJWT"
 
@@ -16,6 +17,7 @@ const socket = io('http://localhost:3000');
 const Sidebar = () => {
   const users = useSelector((state: RootState) => state.users.users);
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
+  const [showUserModal, setShowUserModal] = useState<boolean>(false)
   const dispatch = useDispatch()
   
   useEffect(() => {
@@ -59,14 +61,32 @@ const Sidebar = () => {
 
   return (
     <aside className="w-70 h-full flex flex-col bg-slate-800 bg-whatsapp">
-      <div className='w-full'>
+      <div className='w-full flex items-center'>
         <SearchBar />
+        <button
+          onClick={() => setShowUserModal(true)}
+          className="bg-white h-full text-sm px-4 py-2 rounded-md text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
+          >
+          New Chat
+        </button>
       </div>
       <div className="w-full">
-        {users.map((user: User) => (
-          <ChatCard key={user.id} chatCardUser={user} />
-        ))}
+        {users
+          .filter((user: User) => user.id !== loggedInUserID)
+          .map((user: User) => (
+            <ChatCard key={user.id} chatCardUser={user} />
+          ))}
       </div>
+      {showUserModal && (
+        <UserSelectionModal
+          users={users}
+          onClose={() => setShowUserModal(false)}
+          onSelectUser={(selectedUser) => {
+            console.log('User selected:', selectedUser); // Placeholder for next implementation
+            setShowUserModal(false);
+          }}
+        />
+      )}
     </aside>
   );
 };

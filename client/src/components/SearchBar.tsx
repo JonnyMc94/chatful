@@ -15,20 +15,20 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full">
-      <form onSubmit={onSubmit}>
+    <div className="relative w-full">
+      <form onSubmit={onSubmit} className="w-full">
         <div className="relative">
           <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             type="text"
             id="search-term"
-            className="w-full placeholder:pl-6 border h-14 shadow p-4 pr-14 text-wrap text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
+            className="w-full placeholder:pl-6 h-14 p-4 pr-8 text-wrap text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
             placeholder="Search here..."
             required
           />
-          <span className="flex absolute top-1.5 right-2 bg-transparent rounded text-base text-gray-600 p-2 cursor-pointer">
-            <svg
+          <span className="absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-500 cursor-pointer">
+          <svg
               onClick={onSubmit}
               className="placeholder-gray-500 h-6 w-6 dark:text-teal-300"
               xmlns="http://www.w3.org/2000/svg"

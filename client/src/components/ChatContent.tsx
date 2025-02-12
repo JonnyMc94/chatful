@@ -1,4 +1,4 @@
-import { MessageHolderProps, User } from '../common/types';
+import { User, Message } from '../common/types';
 import MessageHolder from "./MessageHolder";
 import MessageBox from "./MessageBox";
 import UserSelectionModal from '../modals/UserSelectionModal';
@@ -35,7 +35,7 @@ const ChatContent = () => {
 
     fetchUsers();
 
-    socket.on('newMessage', (message: MessageHolderProps) => {
+    socket.on('newMessage', (message: Message) => {
       dispatch(addMessage(message)); // Dispatch message to Redux
     });
   
@@ -95,7 +95,7 @@ const ChatContent = () => {
   return (
     <div className="flex flex-col items-stretch flex-grow overflow-y-auto p-6">
       {messages.map((data, index) => (
-        <MessageHolder key={index} message={data.message}/>
+        <MessageHolder key={index} message={data}/>
       ))}
       <div className="mt-auto">
         <MessageBox onSendMessage={handleSendMessage} />

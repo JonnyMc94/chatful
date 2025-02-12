@@ -78,7 +78,7 @@ const ChatCard = ({ chatCardUser }: ChatCardProps) => {
   }, [loggedInUserID, chatCardUser, username, avatar]);
 
   return (
-    <div className="flex flex-row items-center w-full shadow-2xl bg-white p-4">
+    <div className="flex flex-row items-center w-full border bg-white p-4">
       <div className="rounded-full flex items-center justify-center ml-2">
         <img src={chatData.avatar} alt="My Avatar" className="w-16 h-16 rounded-full" />
       </div>
