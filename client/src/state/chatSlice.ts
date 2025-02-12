@@ -18,6 +18,23 @@ const chatSlice = createSlice({
     setMessages(state, action: PayloadAction<MessageHolderProps[]>) {
       state.messages = action.payload;
     },
+    updateMessage(state, action: PayloadAction<MessageHolderProps>) {
+        state.messages = state.messages.map((msg) =>
+          msg.message.senderId === action.payload.message.senderId &&
+          msg.message.createdAt === action.payload.message.createdAt
+            ? action.payload
+            : msg
+        );
+      },
+    deleteMessage(state, action: PayloadAction<MessageHolderProps>) {
+        state.messages = state.messages.filter(
+          (msg) =>
+            !(
+              msg.message.senderId === action.payload.message.senderId &&
+              msg.message.createdAt === action.payload.message.createdAt
+            )
+        );
+      },
     addMessage(state, action: PayloadAction<MessageHolderProps>) {
       state.messages.push(action.payload);
     },
@@ -27,6 +44,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setMessages, addMessage, setActiveChat } = chatSlice.actions;
+export const { setMessages, addMessage, updateMessage, deleteMessage, setActiveChat } = chatSlice.actions;
 
 export default chatSlice.reducer;

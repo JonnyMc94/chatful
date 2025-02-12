@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUsers } from '../state/userSlice';
+import { RootState }  from '../state/store';
 import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
 import { User } from "../common/types";
@@ -11,8 +14,9 @@ import axios from "axios";
 const socket = io('http://localhost:3000');
 
 const Sidebar = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useSelector((state: RootState) => state.users.users);
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
+  const dispatch = useDispatch()
   
   useEffect(() => {
     const id = decodeJWT()?.userId
@@ -24,11 +28,10 @@ const Sidebar = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get('http://localhost:3000/user/users');
-        const data = await response.data;
-        const filteredUsers = data.filter((user: User) => user.id !== loggedInUserID);
-        setUsers(filteredUsers);
+        const data = response.data.filter((user: User) => user.id !== loggedInUserID);
+        dispatch(setUsers(data)); // Dispatch users to Redux
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error('Error fetching users:', error);
       }
     };
 
@@ -36,17 +39,16 @@ const Sidebar = () => {
 
     // Listen for real-time updates
     socket.on('newMessage', (newMessage) => {
-      setUsers((prevUsers) => {
-        return prevUsers.map(user => {
-          if (user.id === newMessage.userId) {
-            return {
-              ...user,
-              messages: [...(user.messages || []), newMessage]
-            };
-          }
-          return user;
-        });
+      const updatedUsers = users.map((user: User) => {
+        if (user.id === newMessage.userId) {
+          return {
+            ...user,
+            messages: [...(user.messages || []), newMessage]
+          };
+        }
+        return user;
       });
+      dispatch(setUsers(updatedUsers));
     });
 
     // Cleanup on component unmount
@@ -61,7 +63,7 @@ const Sidebar = () => {
         <SearchBar />
       </div>
       <div className="w-full">
-        {users.map((user) => (
+        {users.map((user: User) => (
           <ChatCard key={user.id} chatCardUser={user} />
         ))}
       </div>

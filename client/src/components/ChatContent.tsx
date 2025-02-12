@@ -4,17 +4,23 @@ import MessageBox from "./MessageBox";
 import UserSelectionModal from '../modals/UserSelectionModal';
 import { decodeJWT } from "../utils/decodeJWT"
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setMessages, addMessage, setActiveChat, updateMessage, deleteMessage } from '../state/chatSlice';
+import { RootState } from '../state/store';
 import io from 'socket.io-client';
 import axios from "axios";
 
 const socket = io('http://localhost:3000'); 
 
 const ChatContent = () => {
-  const [messages, setMessages] = useState<MessageHolderProps[]>([]);
+  const messages = useSelector((state: RootState) => state.chat.messages);
+  const activeChatId = useSelector((state: RootState) => state.chat.activeChatId);
   const [pendingMessage, setPendingMessage] = useState<string>("")
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [displayUserModal, setDisplayUserModal] = useState<boolean>(false);
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // Fetch users from the server
@@ -29,34 +35,19 @@ const ChatContent = () => {
 
     fetchUsers();
 
-    // Listen for new messages
     socket.on('newMessage', (message: MessageHolderProps) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      dispatch(addMessage(message)); // Dispatch message to Redux
     });
+  
 
     // Listen for updated messages
-    socket.on('updateMessage', (updatedMessage: MessageHolderProps) => {
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.message.senderId === updatedMessage.message.senderId &&
-          msg.message.createdAt === updatedMessage.message.createdAt
-            ? updatedMessage
-            : msg
-        )
-      );
+    socket.on('updateMessage', (updatedMessage) => {
+      dispatch(updateMessage(updatedMessage));
     });
 
     // Listen for deleted messages
-    socket.on('deleteMessage', (deletedMessage: MessageHolderProps) => {
-      setMessages((prevMessages) =>
-        prevMessages.filter(
-          (msg) =>
-            !(
-              msg.message.senderId === deletedMessage.message.senderId &&
-              msg.message.createdAt === deletedMessage.message.createdAt
-            )
-        )
-      );
+    socket.on('deleteMessage', (deletedMessage) => {
+      dispatch(deleteMessage(deletedMessage));
     });
 
     // Cleanup on component unmount
@@ -76,8 +67,7 @@ const ChatContent = () => {
   }, [selectedUser]);
 
   const handleUserSelect = (user: User) => {
-    console.log("User selected:", user);
-    setSelectedUser(user);
+    dispatch(setActiveChat(user.id));
     setDisplayUserModal(false);
   };
 
