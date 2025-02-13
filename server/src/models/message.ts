@@ -1,7 +1,6 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Table, Column, Model, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
 import { User } from './user';
-
-console.log('Initializing Message model');
+import { Conversations } from './conversations';
 
 @Table
 export class Message extends Model {
@@ -26,6 +25,13 @@ export class Message extends Model {
   })
   public recipientId!: number;
 
+  @ForeignKey(() => Conversations)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  public conversationId!: number;
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -44,6 +50,9 @@ export class Message extends Model {
 
   @BelongsTo(() => User, 'recipientId')
   public recipient!: User;
+
+  @BelongsTo(() => Conversations, 'conversationId')
+  public conversation!: Conversations;
 
   static async findById(senderId: number, id: number) {
     const result = await Message.findOne({

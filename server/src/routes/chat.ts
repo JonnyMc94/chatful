@@ -1,6 +1,7 @@
 import express from "express";
 import { Response, Request } from "express";
 import { Message } from "../models/message";
+import { Conversations } from "../models/conversations";
 import { Op } from "sequelize";
 
 const router = express.Router();
@@ -58,21 +59,74 @@ router.get("/conversation/:userID/:otherUserID", async (req: Request, res: Respo
   }
 });
 
-// Create a new message
+// Create or return an existing conversation between two users
+router.post("/conversation/create", async (req: Request, res: Response) => {
+  const { userId, recipientId } = req.body;
+
+  try {
+    let conversation = await Conversations.findOne({
+      where: {
+        [Op.or]: [
+          { user1Id: userId, user2Id: recipientId },
+          { user1Id: recipientId, user2Id: userId }
+        ]
+      }
+    });
+
+    if (!conversation) {
+      conversation = await Conversations.create({
+        user1Id: userId,
+        user2Id: recipientId
+      });
+    }
+
+    res.status(200).json({ conversationId: conversation.id });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.post("/message", async (req: Request, res: Response) => {
   try {
-    console.log("Received message request:", req.body);
     const { senderId, recipientId, message } = req.body;
-    const newMessage = await Message.create({ senderId, recipientId, message, timestamp: new Date() });
-    console.log("New message created:", newMessage);
+
+    // Check if a conversation already exists between these users
+    let conversation = await Conversations.findOne({
+      where: {
+        [Op.or]: [
+          { user1Id: senderId, user2Id: recipientId },
+          { user1Id: recipientId, user2Id: senderId },
+        ],
+      },
+    });
+
+    // If no conversation exists, create a new one
+    if (!conversation) {
+      conversation = await Conversations.create({
+        user1Id: senderId,
+        user2Id: recipientId,
+      });
+    }
+
+    // Create the new message with the conversationId
+    const newMessage = await Message.create({
+      senderId,
+      recipientId,
+      message,
+      conversationId: conversation.id,
+      timestamp: new Date(),
+    });
+
     const io = req.app.get("socketio");
     io.emit("newMessage", newMessage);
+
     res.json(newMessage);
   } catch (err: any) {
     console.error("Error saving message:", err);
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Update a selected message
 router.put("/message/:id", async (req: Request, res: Response) => {
