@@ -10,6 +10,7 @@ import { decodeJWT } from "../utils/decodeJWT"
 
 import io from 'socket.io-client';
 import axios from "axios";
+import { setActiveChat } from "../state/chatSlice";
 
 
 const socket = io('http://localhost:3000');
@@ -59,6 +60,20 @@ const Sidebar = () => {
     };
   }, []);
 
+  const handleCreateConversation = async (selectedUser: User) => {
+    try {
+      const response = await axios.post('http://localhost:3000/conversation/create', {
+        userId: loggedInUserID,
+        recipientId: selectedUser.id,
+      });
+      const conversationId = response.data.conversationId;
+      dispatch(setActiveChat(conversationId));
+      setShowUserModal(false);
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+  };
+
   return (
     <aside className="w-70 h-full flex flex-col bg-slate-800 bg-whatsapp">
       <div className='w-full flex items-center'>
@@ -81,10 +96,7 @@ const Sidebar = () => {
         <UserSelectionModal
           users={users}
           onClose={() => setShowUserModal(false)}
-          onSelectUser={(selectedUser) => {
-            console.log('User selected:', selectedUser); // Placeholder for next implementation
-            setShowUserModal(false);
-          }}
+          onSelectUser={(selectedUser) => handleCreateConversation(selectedUser)}
         />
       )}
     </aside>
