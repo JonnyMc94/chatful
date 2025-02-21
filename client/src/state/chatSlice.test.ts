@@ -1,10 +1,11 @@
 import chatReducer, { setMessages, updateMessage, deleteMessage } from './chatSlice';
-import { Message } from '../common/types';
+import { Message, Conversation } from '../common/types';
 
 describe('chatSlice', () => {
   const initialState = {
     messages: [] as Message[],
     activeChatId: null,
+    conversations: [] as Conversation[]
   };
 
   const mockMessage: Message = {
@@ -16,6 +17,13 @@ describe('chatSlice', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+
+  const mockCoversation: Conversation = {
+    id: 1,
+    user1Id: 4,
+    user2Id: 5,
+    lastMessage: "This is the last message"
+  }
 
   test('should return the initial state', () => {
     expect(chatReducer(undefined, { type: '@@INIT' })).toEqual(initialState);
@@ -31,6 +39,7 @@ describe('chatSlice', () => {
     const stateWithMessage = {
       messages: [mockMessage],
       activeChatId: null,
+      conversations: [mockCoversation]
     };
 
     const updatedMessage: Message = {
@@ -46,6 +55,7 @@ describe('chatSlice', () => {
     const stateWithMessage = {
       messages: [mockMessage],
       activeChatId: null,
+      conversations: [mockCoversation]
     };
 
     const newState = chatReducer(stateWithMessage, deleteMessage(mockMessage));

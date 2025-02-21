@@ -15,18 +15,22 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
   try {
     const conversations = await Message.findAll({
       where: {
-        [Op.or]: [
-          { senderId: userId },
-          { recipientId: userId },
-        ],
+        [Op.or]: [{ senderId: userId }, { recipientId: userId }],
       },
       order: [["timestamp", "DESC"]],
+      attributes: ["id", "senderId", "recipientId", "message", "timestamp"],
     });
 
     const activeConversations = conversations.reduce((acc: any, message: any) => {
       const otherUserId = message.senderId === userId ? message.recipientId : message.senderId;
       if (!acc[otherUserId]) {
-        acc[otherUserId] = message;
+        acc[otherUserId] = {
+          conversationId: message.id,
+          senderId: message.senderId,
+          recipientId: message.recipientId,
+          lastMessage: message.message,
+          timestamp: message.timestamp,
+        };
       }
       return acc;
     }, {});
@@ -36,6 +40,7 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
     res.status(404).json({ message: err.message });
   }
 });
+
 
 // Get all messages for a specific conversation
 router.get("/conversation/:userID/:otherUserID", async (req: Request, res: Response) => {

@@ -7,16 +7,17 @@ import ChatCard from "./ChatCard";
 import UserSelectionModal from "../modals/UserSelectionModal";
 import { User } from "../common/types";
 import { decodeJWT } from "../utils/decodeJWT"
-
 import io from 'socket.io-client';
 import axios from "axios";
-import { setActiveChat } from "../state/chatSlice";
+import { setActiveChat, addConversation } from "../state/chatSlice";
 
 
 const socket = io('http://localhost:3000');
 
 const Sidebar = () => {
   const users = useSelector((state: RootState) => state.users.users);
+  const conversations = useSelector((state: RootState) => state.chat.conversations);
+  const activeChatId = useSelector((state: RootState) => state.chat.activeChatId);
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
   const [showUserModal, setShowUserModal] = useState<boolean>(false)
   const dispatch = useDispatch()
@@ -58,15 +59,16 @@ const Sidebar = () => {
     return () => {
       socket.off('newMessage');
     };
-  }, []);
+  }, [loggedInUserID]);
 
   const handleCreateConversation = async (selectedUser: User) => {
     try {
-      const response = await axios.post('http://localhost:3000/conversation/create', {
+      const response = await axios.post('http://localhost:3000/chat/conversation/create', {
         userId: loggedInUserID,
         recipientId: selectedUser.id,
       });
       const conversationId = response.data.conversationId;
+      dispatch(addConversation(response.data));
       dispatch(setActiveChat(conversationId));
       setShowUserModal(false);
     } catch (error) {
@@ -86,10 +88,12 @@ const Sidebar = () => {
         </button>
       </div>
       <div className="w-full">
-        {users
-          .filter((user: User) => user.id !== loggedInUserID)
-          .map((user: User) => (
-            <ChatCard key={user.id} chatCardUser={user} />
+        {conversations.map((conversation) => (
+        <ChatCard
+          key={conversation.id}
+          conversation={conversation}
+          isActive={conversation.id === activeChatId}
+        />
           ))}
       </div>
       {showUserModal && (

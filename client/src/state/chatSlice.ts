@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Message } from '../common/types';
-
+import { Message, Conversation } from '../common/types';
 interface ChatState {
   messages: Message[];
   activeChatId: number | null;
+  conversations: Conversation[];
 }
 
 const initialState: ChatState = {
   messages: [],
   activeChatId: null,
+  conversations: [],
 };
 
 const chatSlice = createSlice({
@@ -41,9 +42,15 @@ const chatSlice = createSlice({
     setActiveChat(state, action: PayloadAction<number | null>) {
       state.activeChatId = action.payload;
     },
+    addConversation: (state, action: PayloadAction<Conversation>) => {
+      state.conversations.push(action.payload);
+    },
+    setConversations: (state, action: PayloadAction<Conversation[]>) => {
+      state.conversations = action.payload;
+    },
   },
 });
 
-export const { setMessages, addMessage, updateMessage, deleteMessage, setActiveChat } = chatSlice.actions;
+export const { setMessages, addMessage, updateMessage, deleteMessage, setActiveChat, addConversation, setConversations } = chatSlice.actions;
 
 export default chatSlice.reducer;

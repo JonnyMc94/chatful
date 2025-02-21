@@ -22,8 +22,16 @@ export interface UserSelectionModalProps {
   onClose: () => void;
 }
 
+export interface Conversation {
+  id: number;
+  user1Id: number;
+  user2Id: number;
+  lastMessage: string;
+}
+
 export interface ChatCardProps {
-  chatCardUser: User;
+  conversation: Conversation;
+  isActive: boolean;
 }
 
 export interface ModalProps {
