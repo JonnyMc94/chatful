@@ -59,7 +59,7 @@ const Sidebar = () => {
     return () => {
       socket.off('newMessage');
     };
-  }, [loggedInUserID]);
+  }, [loggedInUserID, dispatch]);
 
   const handleCreateConversation = async (selectedUser: User) => {
     try {
@@ -67,6 +67,7 @@ const Sidebar = () => {
         userId: loggedInUserID,
         recipientId: selectedUser.id,
       });
+      console.log("Created Conversation:", response.data); // DEBUG: Check response
       const conversationId = response.data.conversationId;
       dispatch(addConversation(response.data));
       dispatch(setActiveChat(conversationId));

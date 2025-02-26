@@ -85,7 +85,7 @@ router.post("/conversation/create", async (req: Request, res: Response) => {
       });
     }
 
-    res.status(200).json({ conversationId: conversation.id });
+    res.status(200).json(conversation);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }

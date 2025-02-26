@@ -4,7 +4,7 @@ import { truncateText } from "../utils/text-manipulation";
 import { decodeJWT } from "../utils/decodeJWT";
 import { useSelector } from "react-redux";
 import { RootState } from "../state/store";
-import axios from "axios";
+// import axios from "axios";
 
 const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
   const loggedInUserID = decodeJWT()?.userId;
@@ -27,7 +27,7 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
         lastMessage: conversation.lastMessage,
       });
     }
-  }, [conversation, users, loggedInUserID]);
+  }, [loggedInUserID, conversation, users]);
 
   return (
     <div

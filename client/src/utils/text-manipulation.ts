@@ -1,7 +1,5 @@
 export const truncateText = (text: string, limit: number) => {
-    const words = text.split(' ');
-    if (words.length > limit) {
-      return words.slice(0, limit).join(' ') + '...';
-    }
-    return text;
+  if (!text) return ""; // Return empty string if text is undefined
+  const words = text.split(" ");
+  return words.length > limit ? words.slice(0, limit).join(" ") + "..." : text;
   };
