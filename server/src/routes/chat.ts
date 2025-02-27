@@ -18,14 +18,13 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
         [Op.or]: [{ senderId: userId }, { recipientId: userId }],
       },
       order: [["timestamp", "DESC"]],
-      attributes: ["id", "senderId", "recipientId", "message", "timestamp"],
+      attributes: ["id", "senderId", "recipientId", "message", "timestamp", "conversationId"],
     });
 
     const activeConversations = conversations.reduce((acc: any, message: any) => {
-      const otherUserId = message.senderId === userId ? message.recipientId : message.senderId;
-      if (!acc[otherUserId]) {
-        acc[otherUserId] = {
-          conversationId: message.id,
+      if (!acc[message.conversationId]) {
+        acc[message.conversationId] = {
+          conversationId: message.conversationId,
           senderId: message.senderId,
           recipientId: message.recipientId,
           lastMessage: message.message,
