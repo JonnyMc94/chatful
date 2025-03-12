@@ -2,11 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../common/types';
 
 interface UserState {
-  users: User[];
+  users: User[],
+  selectedUser: User | null;
 }
 
 const initialState: UserState = {
   users: [],
+  selectedUser: null, // Initialize selectedUser as null
+
 };
 
 const userSlice = createSlice({
@@ -16,9 +19,12 @@ const userSlice = createSlice({
     setUsers(state, action: PayloadAction<User[]>) {
       state.users = action.payload;
     },
+    setSelectedUser(state, action: PayloadAction<User>){
+      state.selectedUser = action.payload;
+    }
   },
 });
 
-export const { setUsers } = userSlice.actions;
+export const { setUsers, setSelectedUser } = userSlice.actions;
 
 export default userSlice.reducer;

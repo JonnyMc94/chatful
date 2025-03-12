@@ -1,11 +1,12 @@
-import { User, Message } from '../common/types';
+import { Message, User } from '../common/types';
 import MessageHolder from "./MessageHolder";
 import MessageBox from "./MessageBox";
 import UserSelectionModal from '../modals/UserSelectionModal';
-import { decodeJWT } from "../utils/decodeJWT"
+import { decodeJWT } from "../utils/decodeJWT";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMessages, addMessage, setActiveChat, updateMessage, deleteMessage } from '../state/chatSlice';
+import { setMessages, addMessage, updateMessage, deleteMessage } from '../state/chatSlice';
+import { setSelectedUser } from '../state/userSlice';
 import { RootState } from '../state/store';
 import io from 'socket.io-client';
 import axios from "axios";
@@ -15,13 +16,13 @@ const socket = io('http://localhost:3000');
 const ChatContent = () => {
   const messages = useSelector((state: RootState) => state.chat.messages);
   const activeChatId = useSelector((state: RootState) => state.chat.activeChatId);
-  const [pendingMessage, setPendingMessage] = useState<string>("")
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [displayUserModal, setDisplayUserModal] = useState<boolean>(false);
+  const selectedUser = useSelector((state: RootState) => state.users.selectedUser);
 
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const currentUserId = decodeJWT()?.userId;
+  
   useEffect(() => {
     // Fetch users from the server
     const fetchUsers = async () => {
@@ -36,59 +37,58 @@ const ChatContent = () => {
     fetchUsers();
 
     socket.on('newMessage', (message: Message) => {
-      dispatch(addMessage(message)); // Dispatch message to Redux
+      dispatch(addMessage(message));
     });
-  
 
-    // Listen for updated messages
     socket.on('updateMessage', (updatedMessage) => {
       dispatch(updateMessage(updatedMessage));
     });
 
-    // Listen for deleted messages
     socket.on('deleteMessage', (deletedMessage) => {
       dispatch(deleteMessage(deletedMessage));
     });
 
-    // Cleanup on component unmount
     return () => {
       socket.off('newMessage');
       socket.off('updateMessage');
       socket.off('deleteMessage');
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (selectedUser && pendingMessage) {
-      console.log("Sending pending message:", pendingMessage);
-      handleSendMessage(pendingMessage);
-      setPendingMessage("");
-    }
-  }, [selectedUser]);
+    if (activeChatId) {
+      // Fetch messages for the active chat
+      const fetchMessages = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/chat/conversation/${activeChatId}`);
+          dispatch(setMessages(response.data));
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      };
 
-  const handleUserSelect = (user: User) => {
-    dispatch(setActiveChat(user.id));
-    setDisplayUserModal(false);
-  };
+      fetchMessages();
+    }
+  }, [activeChatId, dispatch]);
 
   const handleSendMessage = async (message: string) => {
-    if (!selectedUser) {
-      console.log("No user selected, setting pending message:", message);
-      setPendingMessage(message);
-      setDisplayUserModal(true);
-    } else {
-      try {
-        console.log("Sending message:", message);
-        const response = await axios.post('http://localhost:3000/chat/message', {
-          senderId: decodeJWT()?.userId,
-          recipientId: selectedUser.id,
-          message: message
-        });
-        console.log("Message sent:", response.data);
-        socket.emit("message", response.data);
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
+    if (!activeChatId) {
+      console.error("No active chat to send a message to.");
+      return;
+    }
+
+    try {
+      console.log("Sending message:", message);
+      const response = await axios.post('http://localhost:3000/chat/message', {
+        senderId: currentUserId,
+        recipientId: selectedUser?.id,
+        message,
+        conversationId: activeChatId,
+      });
+      console.log("Message sent:", response.data);
+      socket.emit("newMessage", response.data);
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
@@ -103,7 +103,7 @@ const ChatContent = () => {
       {displayUserModal && (
         <UserSelectionModal
           users={users}
-          onSelectUser={handleUserSelect}
+          onSelectUser={(user) => dispatch(setSelectedUser(user))}
           onClose={() => setDisplayUserModal(false)}
         />
       )}

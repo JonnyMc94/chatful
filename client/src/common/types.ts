@@ -6,6 +6,7 @@ export interface Message {
   timestamp: Date;
   createdAt: Date;
   updatedAt: Date;
+  conversationId?: number;
 }
 
 export interface User {

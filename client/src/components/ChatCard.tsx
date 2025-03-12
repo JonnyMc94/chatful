@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { setActiveChat } from "../state/chatSlice";
+import { setSelectedUser } from "../state/userSlice";
 import { ChatCardProps } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
 import { decodeJWT } from "../utils/decodeJWT";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../state/store";
-// import axios from "axios";
 
 const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
   const loggedInUserID = decodeJWT()?.userId;
@@ -14,11 +15,15 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     avatar: "",
     lastMessage: conversation.lastMessage,
   });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Find the other user in the conversation
-    const otherUserId = conversation.user1Id === loggedInUserID ? conversation.user2Id : conversation.user1Id;    
-    const otherUser = users.find(user => user.id === otherUserId);    
+    const otherUserId =
+      conversation.user1Id === loggedInUserID
+        ? conversation.user2Id
+        : conversation.user1Id;
+    const otherUser = users.find((user) => user.id === otherUserId);
 
     if (otherUser) {
       setChatData({
@@ -29,18 +34,36 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     }
   }, [loggedInUserID, conversation, users]);
 
+  const handleClick = () => {
+    dispatch(setActiveChat(conversation.id));
+    const foundUser = users.find(user => user.id === (conversation.user1Id === loggedInUserID ? conversation.user2Id : conversation.user1Id));
+    if (foundUser) {
+      dispatch(setSelectedUser(foundUser));
+    }
+  };
+
   return (
     <div
       className={`flex flex-row items-center w-full border bg-white p-4 cursor-pointer ${
         isActive ? "bg-gray-300" : ""
       }`}
+      onClick={handleClick} // Handle chat selection
     >
-      <div className="rounded-full flex items-center justify-center ml-2">
-        <img src={chatData.avatar} alt="Avatar" className="w-16 h-16 rounded-full" />
+      <div className="flex items-start">
+        <img
+          src={chatData.avatar}
+          alt="Avatar"
+          className="w-16 h-16 rounded-full"
+        />
       </div>
-      <div className="flex flex-col pl-6 gap-3 flex-grow">
+      <div className="flex flex-col pl-4 flex-grow">
         <div className="flex justify-between items-center">
-          <div className="text-3xl text-left text-slate-800">{chatData.senderName}</div>
+          <div className="text-3xl text-left text-slate-800">
+            {chatData.senderName}
+          </div>
+          <span className="text-base text-slate-800">
+            {new Date().toLocaleTimeString()}
+          </span>
         </div>
         <p className="text-xl text-left lg:text-sm text-slate-800 line-clamp-1">
           {truncateText(chatData.lastMessage, 10)}

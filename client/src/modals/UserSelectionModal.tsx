@@ -1,7 +1,12 @@
 import React from 'react';
 import { UserSelectionModalProps } from '../common/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState }  from '../state/store';
+import { setUsers, setSelectedUser } from '../state/userSlice';
+
 
 const UserSelectionModal = ({ users, onSelectUser, onClose }: UserSelectionModalProps) => {
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">

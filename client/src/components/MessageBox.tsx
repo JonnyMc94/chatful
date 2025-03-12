@@ -8,6 +8,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState<string>("");
 
   const handleSendMessage = () => {
+    if (message.trim() === "") {
+      return; // Do not send empty messages
+    }
     onSendMessage(message);
     setMessage(""); // Clear the input field
   };

@@ -13,46 +13,44 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
   const userId = Number(req.params.userID);
 
   try {
-    const conversations = await Message.findAll({
+    const conversations = await Conversations.findAll({
       where: {
-        [Op.or]: [{ senderId: userId }, { recipientId: userId }],
+        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
       },
-      order: [["timestamp", "DESC"]],
-      attributes: ["id", "senderId", "recipientId", "message", "timestamp", "conversationId"],
+      include: [{
+        model: Message,
+        as: 'messages',
+        order: [["timestamp", "DESC"]],
+        limit: 1,
+      }],
     });
 
-    const activeConversations = conversations.reduce((acc: any, message: any) => {
-      if (!acc[message.conversationId]) {
-        acc[message.conversationId] = {
-          conversationId: message.conversationId,
-          senderId: message.senderId,
-          recipientId: message.recipientId,
-          lastMessage: message.message,
-          timestamp: message.timestamp,
-        };
-      }
-      return acc;
-    }, {});
+    const activeConversations = conversations.map((conversation: any) => {
+      const lastMessage = conversation.messages[0];
+      return {
+        id: conversation.id,
+        user1Id: conversation.user1Id,
+        user2Id: conversation.user2Id,
+        lastMessage: lastMessage ? lastMessage.message : '',
+        timestamp: lastMessage ? lastMessage.timestamp : null,
+        messages: conversation.messages,
+      };
+    });
 
-    res.json(Object.values(activeConversations));
+    res.json(activeConversations);
   } catch (err: any) {
     res.status(404).json({ message: err.message });
   }
 });
 
-
 // Get all messages for a specific conversation
-router.get("/conversation/:userID/:otherUserID", async (req: Request, res: Response) => {
-  const userId = Number(req.params.userID);
-  const otherUserId = Number(req.params.otherUserID);
+router.get("/conversation/:conversationId", async (req: Request, res: Response) => {
+  const conversationId = Number(req.params.conversationId);
 
   try {
     const messages = await Message.findAll({
       where: {
-        [Op.or]: [
-          { senderId: userId, recipientId: otherUserId },
-          { senderId: otherUserId, recipientId: userId },
-        ],
+        conversationId: conversationId,
       },
       order: [["timestamp", "ASC"]],
     });
@@ -92,17 +90,17 @@ router.post("/conversation/create", async (req: Request, res: Response) => {
 
 router.post("/message", async (req: Request, res: Response) => {
   try {
-    const { senderId, recipientId, message } = req.body;
+    const { senderId, recipientId, message, conversationId } = req.body;
+    console.log(req.body)
 
     // Check if a conversation already exists between these users
     let conversation = await Conversations.findOne({
       where: {
-        [Op.or]: [
-          { user1Id: senderId, user2Id: recipientId },
-          { user1Id: recipientId, user2Id: senderId },
-        ],
+        id: conversationId,
       },
     });
+
+    console.log(conversation)
 
     // If no conversation exists, create a new one
     if (!conversation) {
@@ -121,6 +119,8 @@ router.post("/message", async (req: Request, res: Response) => {
       timestamp: new Date(),
     });
 
+    console.log(newMessage)
+
     const io = req.app.get("socketio");
     io.emit("newMessage", newMessage);
 
@@ -130,7 +130,6 @@ router.post("/message", async (req: Request, res: Response) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // Update a selected message
 router.put("/message/:id", async (req: Request, res: Response) => {

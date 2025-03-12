@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { setUsers } from '../state/userSlice';
+import { setUsers, setSelectedUser } from '../state/userSlice';
 import { RootState }  from '../state/store';
 import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
 import UserSelectionModal from "../modals/UserSelectionModal";
 import { User } from "../common/types";
-import { decodeJWT } from "../utils/decodeJWT"
+import { decodeJWT } from "../utils/decodeJWT";
 import io from 'socket.io-client';
 import axios from "axios";
-import { setActiveChat, addConversation } from "../state/chatSlice";
-
+import { setActiveChat, addConversation, setConversations } from "../state/chatSlice";
 
 const socket = io('http://localhost:3000');
 
 const Sidebar = () => {
   const users = useSelector((state: RootState) => state.users.users);
+  const selectedUser = useSelector((state: RootState) => state.users.selectedUser)
   const conversations = useSelector((state: RootState) => state.chat.conversations);
   const activeChatId = useSelector((state: RootState) => state.chat.activeChatId);
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
-  const [showUserModal, setShowUserModal] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  const [showUserModal, setShowUserModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
   
   useEffect(() => {
-    const id = decodeJWT()?.userId
-    setLoggedInUserId(id || 0)
+    const id = decodeJWT()?.userId;
+    setLoggedInUserId(id || 0);
   }, []);
 
   useEffect(() => {
@@ -40,6 +40,18 @@ const Sidebar = () => {
     };
 
     fetchUsers();
+
+    // Fetch initial conversation data
+    const fetchConversations = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/chat/messages/${loggedInUserID}`);
+        dispatch(setConversations(response.data)); // Dispatch conversations to Redux
+      } catch (error) {
+        console.error('Error fetching conversations:', error);
+      }
+    };
+
+    fetchConversations();
 
     // Listen for real-time updates
     socket.on('newMessage', (newMessage) => {
@@ -68,9 +80,10 @@ const Sidebar = () => {
         recipientId: selectedUser.id,
       });
       console.log("Created Conversation:", response.data); // DEBUG: Check response
-      const conversationId = response.data.conversationId;
+      const conversationId = response.data.id;
       dispatch(addConversation(response.data));
       dispatch(setActiveChat(conversationId));
+      dispatch(setSelectedUser(selectedUser)); // Dispatch setSelectedUser
       setShowUserModal(false);
     } catch (error) {
       console.error('Error creating conversation:', error);
@@ -90,18 +103,20 @@ const Sidebar = () => {
       </div>
       <div className="w-full">
         {conversations.map((conversation) => (
-        <ChatCard
-          key={conversation.id}
-          conversation={conversation}
-          isActive={conversation.id === activeChatId}
-        />
-          ))}
+          <ChatCard
+            key={conversation.id}
+            conversation={conversation}
+            isActive={conversation.id === activeChatId}
+          />
+        ))}
       </div>
       {showUserModal && (
         <UserSelectionModal
           users={users}
           onClose={() => setShowUserModal(false)}
-          onSelectUser={(selectedUser) => handleCreateConversation(selectedUser)}
+          onSelectUser={(selectedUser) => {
+            handleCreateConversation(selectedUser);
+          }}
         />
       )}
     </aside>
