@@ -28,6 +28,8 @@ export interface Conversation {
   user1Id: number;
   user2Id: number;
   lastMessage: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ChatCardProps {

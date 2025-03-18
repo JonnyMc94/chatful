@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { setActiveChat } from "../state/chatSlice";
+import { setActiveChat, setMessages } from "../state/chatSlice";
 import { setSelectedUser } from "../state/userSlice";
 import { ChatCardProps } from "../common/types";
 import { truncateText } from "../utils/text-manipulation";
 import { decodeJWT } from "../utils/decodeJWT";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../state/store";
+import axios from "axios";
 
 const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
   const loggedInUserID = decodeJWT()?.userId;
@@ -14,6 +15,7 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     senderName: "",
     avatar: "",
     lastMessage: conversation.lastMessage,
+    updatedAt: new Date()
   });
   const dispatch = useDispatch();
 
@@ -30,12 +32,14 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
         senderName: otherUser.username,
         avatar: otherUser.avatar,
         lastMessage: conversation.lastMessage,
+        updatedAt: conversation.updatedAt
       });
     }
   }, [loggedInUserID, conversation, users]);
 
   const handleClick = () => {
     dispatch(setActiveChat(conversation.id));
+    
     const foundUser = users.find(user => user.id === (conversation.user1Id === loggedInUserID ? conversation.user2Id : conversation.user1Id));
     if (foundUser) {
       dispatch(setSelectedUser(foundUser));
@@ -51,7 +55,7 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     >
       <div className="flex items-start">
         <img
-          src={chatData.avatar}
+          src={"https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"}
           alt="Avatar"
           className="w-16 h-16 rounded-full"
         />
@@ -62,10 +66,10 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
             {chatData.senderName}
           </div>
           <span className="text-base text-slate-800">
-            {new Date().toLocaleTimeString()}
+            {new Date(chatData.updatedAt).toLocaleTimeString()}
           </span>
         </div>
-        <p className="text-xl text-left lg:text-sm text-slate-800 line-clamp-1">
+        <p className="text-xl text-left pt-2 lg:text-sm text-slate-800 line-clamp-1">
           {truncateText(chatData.lastMessage, 10)}
         </p>
       </div>

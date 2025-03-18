@@ -22,7 +22,9 @@ describe('chatSlice', () => {
     id: 1,
     user1Id: 4,
     user2Id: 5,
-    lastMessage: "This is the last message"
+    lastMessage: "This is the last message",
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 
   test('should return the initial state', () => {

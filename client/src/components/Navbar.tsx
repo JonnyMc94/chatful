@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 h-22 bg-teal-400 z-20">
       <div className="flex items-center justify-between p-4">
-        <span className="font-extrabold font-serif">Chatful</span>
+        <span className="font-extrabold font-serif text-5xl">Chatful</span>
         <div className="flex flex-row bg-teal-400 text-white">
           {isOpen && (
             <div className="flex flex-row items-center bg-teal-400 text-white gap-6">

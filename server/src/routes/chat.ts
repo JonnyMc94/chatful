@@ -33,6 +33,8 @@ router.get("/messages/:userID", async (req: Request, res: Response) => {
         user2Id: conversation.user2Id,
         lastMessage: lastMessage ? lastMessage.message : '',
         timestamp: lastMessage ? lastMessage.timestamp : null,
+        createdAt: conversation.createdAt, // Include createdAt
+        updatedAt: conversation.updatedAt, // Include updatedAt
         messages: conversation.messages,
       };
     });
