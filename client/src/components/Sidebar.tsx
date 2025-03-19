@@ -91,35 +91,35 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="w-70 h-full flex flex-col bg-slate-800 bg-whatsapp">
-      <div className='w-full flex items-center'>
-        <SearchBar />
-        <button
-          onClick={() => setShowUserModal(true)}
-          className="bg-white h-full text-sm px-4 py-2 rounded-md text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
-          >
-          New Chat
-        </button>
-      </div>
-      <div className="w-full">
-        {conversations.map((conversation) => (
-          <ChatCard
-            key={conversation.id}
-            conversation={conversation}
-            isActive={conversation.id === activeChatId}
-          />
-        ))}
-      </div>
-      {showUserModal && (
-        <UserSelectionModal
-          users={users}
-          onClose={() => setShowUserModal(false)}
-          onSelectUser={(selectedUser) => {
-            handleCreateConversation(selectedUser);
-          }}
+    <aside className="w-full h-full flex flex-col bg-slate-800 bg-whatsapp">
+    <div className="w-full flex items-center">
+      <SearchBar />
+      <button
+        onClick={() => setShowUserModal(true)}
+        className="bg-white h-full text-sm px-4 py-2 rounded-md text-gray-800 dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
+      >
+        New Chat
+      </button>
+    </div>
+    <div className="w-full overflow-y-auto">
+      {conversations.map((conversation) => (
+        <ChatCard
+          key={conversation.id}
+          conversation={conversation}
+          isActive={conversation.id === activeChatId}
         />
-      )}
-    </aside>
+      ))}
+    </div>
+    {showUserModal && (
+      <UserSelectionModal
+        users={users}
+        onClose={() => setShowUserModal(false)}
+        onSelectUser={(selectedUser) => {
+          handleCreateConversation(selectedUser);
+        }}
+      />
+    )}
+  </aside>
   );
 };
 

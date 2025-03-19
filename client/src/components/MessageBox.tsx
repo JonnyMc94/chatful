@@ -16,7 +16,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="flex items-center p-4 border-t border-gray-200">
+    <div className="flex items-center p-4 mt-6 border-t border-gray-200">
       <input
         type="text"
         value={message}

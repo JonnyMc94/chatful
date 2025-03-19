@@ -10,8 +10,11 @@ function ProfilePage() {
     <div className="flex h-screen w-screen bg-whatsapp">
       <Navbar />
       <div className="flex flex-grow mt-22">
-        <Sidebar />
-        <div className="flex flex-col items-center justify-center space-y-4 w-full bg-white p-10 rounded-lg m-5 shadow-lg">
+        {/* Ensure Sidebar has a consistent width */}
+        <div className="w-1/4">
+          <Sidebar />
+        </div>
+        <div className="flex flex-col items-center justify-center space-y-4 w-3/4 bg-white">
           <img
             src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
             alt="User Avatar"

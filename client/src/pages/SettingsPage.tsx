@@ -25,9 +25,9 @@ function SettingsPage() {
   return (
     <div className="flex h-screen w-screen bg-whatsapp">
       <Navbar />
-      <div className="flex flex-grow mt-22">
+      <div className="flex flex-grow mt-22 w-1/4">
         <Sidebar />
-        <div className="flex flex-col items-center justify-center space-y-4 w-full bg-white p-10 rounded-lg m-5 shadow-lg">
+        <div className="flex flex-col items-center justify-center space-y-4 w-3/4 bg-white">
           <h1 className="text-4xl font-bold mb-4 text-slate-600">Settings</h1>
           <form onSubmit={handleSubmit}>
             <div className="m-6 flex flex-row gap-8">

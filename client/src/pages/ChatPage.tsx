@@ -8,8 +8,12 @@ const ChatPage = () => {
     <div className="flex h-screen w-screen">
       <Navbar />
       <div className="flex flex-grow mt-22">
-        <Sidebar />
-        <ChatContent />
+        <div className="w-1/4">
+          <Sidebar />
+        </div>
+        <div className="w-3/4 flex flex-col h-full">
+          <ChatContent />
+        </div>
       </div>
     </div>
   );

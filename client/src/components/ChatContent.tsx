@@ -93,13 +93,20 @@ const ChatContent = () => {
   };
 
   return (
-    <div className="flex flex-col items-stretch flex-grow overflow-y-auto p-6">
-      {messages.map((data, index) => (
-        <MessageHolder key={index} message={data}/>
-      ))}
-      <div className="mt-auto">
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Message List */}
+      <div className="flex-grow overflow-y-auto p-6">
+        {messages.map((data, index) => (
+          <MessageHolder key={index} message={data} />
+        ))}
+      </div>
+  
+      {/* MessageBox */}
+      <div className="sticky bottom-10 bg-white p-4">
         <MessageBox onSendMessage={handleSendMessage} />
       </div>
+  
+      {/* User Selection Modal */}
       {displayUserModal && (
         <UserSelectionModal
           users={users}

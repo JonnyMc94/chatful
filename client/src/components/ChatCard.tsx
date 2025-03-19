@@ -15,7 +15,7 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     senderName: "",
     avatar: "",
     lastMessage: conversation.lastMessage,
-    updatedAt: new Date()
+    updatedAt: new Date(),
   });
   const dispatch = useDispatch();
 
@@ -32,15 +32,21 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
         senderName: otherUser.username,
         avatar: otherUser.avatar,
         lastMessage: conversation.lastMessage,
-        updatedAt: conversation.updatedAt
+        updatedAt: conversation.updatedAt,
       });
     }
   }, [loggedInUserID, conversation, users]);
 
   const handleClick = () => {
     dispatch(setActiveChat(conversation.id));
-    
-    const foundUser = users.find(user => user.id === (conversation.user1Id === loggedInUserID ? conversation.user2Id : conversation.user1Id));
+
+    const foundUser = users.find(
+      (user) =>
+        user.id ===
+        (conversation.user1Id === loggedInUserID
+          ? conversation.user2Id
+          : conversation.user1Id)
+    );
     if (foundUser) {
       dispatch(setSelectedUser(foundUser));
     }
@@ -48,28 +54,28 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
 
   return (
     <div
-      className={`flex flex-row items-center w-full border bg-white p-4 cursor-pointer ${
-        isActive ? "bg-gray-300" : ""
+      className={`flex flex-row items-center w-full bg-white p-4 cursor-pointer ${
+        isActive ? "border bg-slate-50 rounded-md" : ""
       }`}
-      onClick={handleClick} // Handle chat selection
+      onClick={handleClick}
     >
       <div className="flex items-start">
         <img
-          src={"https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"}
+          src={chatData.avatar}
           alt="Avatar"
-          className="w-16 h-16 rounded-full"
+          className="w-12 h-12 md:w-16 md:h-16 rounded-full"
         />
       </div>
       <div className="flex flex-col pl-4 flex-grow">
         <div className="flex justify-between items-center">
-          <div className="text-3xl text-left text-slate-800">
+          <div className="text-lg md:text-3xl text-left text-slate-800">
             {chatData.senderName}
           </div>
-          <span className="text-base text-slate-800">
+          <span className="text-sm md:text-base text-slate-800">
             {new Date(chatData.updatedAt).toLocaleTimeString()}
           </span>
         </div>
-        <p className="text-xl text-left pt-2 lg:text-sm text-slate-800 line-clamp-1">
+        <p className="text-sm md:text-xl text-left pt-2 text-slate-800 line-clamp-1">
           {truncateText(chatData.lastMessage, 10)}
         </p>
       </div>
