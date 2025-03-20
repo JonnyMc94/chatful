@@ -61,7 +61,11 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     >
       <div className="flex items-start">
         <img
-          src={chatData.avatar}
+          src={`${
+            chatData.avatar
+              ? chatData.avatar
+              : "https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
+          }`}
           alt="Avatar"
           className="w-12 h-12 md:w-16 md:h-16 rounded-full"
         />
