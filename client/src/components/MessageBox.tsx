@@ -7,7 +7,8 @@ interface MessageBoxProps {
 const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState<string>("");
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (message.trim() === "") {
       return; // Do not send empty messages
     }
@@ -16,7 +17,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="flex items-center p-4 mt-6 border-t border-gray-200">
+    <form className="flex items-center p-4 mt-6 border-t border-gray-200" onSubmit={handleSendMessage}>
       <input
         type="text"
         value={message}
@@ -25,12 +26,12 @@ const MessageBox: React.FC<MessageBoxProps> = ({ onSendMessage }) => {
         className="flex-grow p-2 border border-gray-300 rounded-md"
       />
       <button
-        onClick={handleSendMessage}
+        type="submit"
         className="ml-2 p-2 bg-blue-500 text-white rounded-md"
       >
         Send
       </button>
-    </div>
+    </form>
   );
 };
 
