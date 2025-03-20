@@ -25,8 +25,10 @@ function SettingsPage() {
   return (
     <div className="flex h-screen w-screen bg-whatsapp">
       <Navbar />
-      <div className="flex flex-grow mt-22 w-1/4">
-        <Sidebar />
+      <div className="flex flex-grow mt-22">
+        <div className="w-1/4 f-full">
+          <Sidebar />
+        </div>
         <div className="flex flex-col items-center justify-center space-y-4 w-3/4 bg-white">
           <h1 className="text-4xl font-bold mb-4 text-slate-600">Settings</h1>
           <form onSubmit={handleSubmit}>
@@ -48,21 +50,21 @@ function SettingsPage() {
             </div>
             <div className="m-6">
               <div className="flex flex-row items-center jutify-center gap-8">
-              <label
-                htmlFor="notifications"
-                className="text-lg font-medium text-gray-700"
-              >
-                Enable notifications
-              </label>
-              <input
-                id="notifications"
-                name="notifications"
-                type="checkbox"
-                checked={notificationsEnabled}
-                onChange={handleNotificationsChange}
-                className="h-6 w-6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
+                <label
+                  htmlFor="notifications"
+                  className="text-lg font-medium text-gray-700"
+                >
+                  Enable notifications
+                </label>
+                <input
+                  id="notifications"
+                  name="notifications"
+                  type="checkbox"
+                  checked={notificationsEnabled}
+                  onChange={handleNotificationsChange}
+                  className="h-6 w-6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
             </div>
             <button
               type="submit"
