@@ -7,6 +7,7 @@ import { decodeJWT } from "../utils/decodeJWT";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../state/store";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
   const loggedInUserID = decodeJWT()?.userId;
@@ -18,6 +19,7 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     updatedAt: new Date(),
   });
   const dispatch = useDispatch();
+  const navigate =  useNavigate();
 
   useEffect(() => {
     // Find the other user in the conversation
@@ -50,6 +52,8 @@ const ChatCard = ({ conversation, isActive }: ChatCardProps) => {
     if (foundUser) {
       dispatch(setSelectedUser(foundUser));
     }
+
+   navigate("/")
   };
 
   return (
