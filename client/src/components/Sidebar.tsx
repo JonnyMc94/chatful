@@ -44,7 +44,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     fetchInitialData();
-
+  
     // Listen for real-time updates
     socket.on("newMessage", (newMessage) => {
       const updatedConversations = conversations.map((conversation) => {
@@ -59,7 +59,7 @@ const Sidebar = () => {
       });
       dispatch(setConversations(updatedConversations));
     });
-
+  
     return () => {
       socket.off("newMessage");
     };

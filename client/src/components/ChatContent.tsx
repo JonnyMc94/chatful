@@ -86,7 +86,6 @@ const ChatContent = () => {
         conversationId: activeChatId,
       });
       console.log("Message sent:", response.data);
-      socket.emit("newMessage", response.data);
     } catch (error) {
       console.error("Error sending message:", error);
     }
