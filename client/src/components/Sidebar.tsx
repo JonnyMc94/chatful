@@ -9,14 +9,22 @@ import { User } from "../common/types";
 import { decodeJWT } from "../utils/decodeJWT";
 import io from "socket.io-client";
 import axios from "axios";
-import { setActiveChat, addConversation, setConversations } from "../state/chatSlice";
+import {
+  setActiveChat,
+  addConversation,
+  setConversations,
+} from "../state/chatSlice";
 
 const socket = io("http://localhost:3000");
 
 const Sidebar = () => {
   const users = useSelector((state: RootState) => state.users.users);
-  const conversations = useSelector((state: RootState) => state.chat.conversations);
-  const activeChatId = useSelector((state: RootState) => state.chat.activeChatId);
+  const conversations = useSelector(
+    (state: RootState) => state.chat.conversations
+  );
+  const activeChatId = useSelector(
+    (state: RootState) => state.chat.activeChatId
+  );
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
   const [showUserModal, setShowUserModal] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -29,7 +37,12 @@ const Sidebar = () => {
 
       // Fetch users
       const usersResponse = await axios.get("http://localhost:3000/user/users");
-      const filteredUsers = usersResponse.data.filter((user: User) => user.id !== id);
+      const filteredUsers = usersResponse.data.filter((user: User) => {
+        return !conversations.some(
+          (conversation) =>
+            conversation.user1Id === user.id || conversation.user2Id === user.id
+        );
+      });
       dispatch(setUsers(filteredUsers));
 
       // Fetch conversations
@@ -44,7 +57,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     fetchInitialData();
-  
+
     // Listen for real-time updates
     socket.on("newMessage", (newMessage) => {
       const updatedConversations = conversations.map((conversation) => {
@@ -59,7 +72,7 @@ const Sidebar = () => {
       });
       dispatch(setConversations(updatedConversations));
     });
-  
+
     return () => {
       socket.off("newMessage");
     };
@@ -67,10 +80,13 @@ const Sidebar = () => {
 
   const handleCreateConversation = async (selectedUser: User) => {
     try {
-      const response = await axios.post("http://localhost:3000/chat/conversation/create", {
-        userId: loggedInUserID,
-        recipientId: selectedUser.id,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/chat/conversation/create",
+        {
+          userId: loggedInUserID,
+          recipientId: selectedUser.id,
+        }
+      );
       const conversationId = response.data.id;
       dispatch(addConversation(response.data));
       dispatch(setActiveChat(conversationId));
