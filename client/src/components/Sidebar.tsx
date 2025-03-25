@@ -5,7 +5,7 @@ import { RootState } from "../state/store";
 import SearchBar from "./SearchBar";
 import ChatCard from "./ChatCard";
 import UserSelectionModal from "../modals/UserSelectionModal";
-import { User } from "../common/types";
+import { User, Conversation } from "../common/types";
 import { decodeJWT } from "../utils/decodeJWT";
 import io from "socket.io-client";
 import axios from "axios";
@@ -27,38 +27,55 @@ const Sidebar = () => {
   );
   const [loggedInUserID, setLoggedInUserId] = useState<number>(0);
   const [showUserModal, setShowUserModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
   const dispatch = useDispatch();
 
-  // Fetch conversations and users
   const fetchInitialData = async () => {
     try {
       const id = decodeJWT()?.userId;
       setLoggedInUserId(id || 0);
 
-      // Fetch users
-      const usersResponse = await axios.get("http://localhost:3000/user/users");
-      const filteredUsers = usersResponse.data.filter((user: User) => {
-        return !conversations.some(
-          (conversation) =>
-            conversation.user1Id === user.id || conversation.user2Id === user.id
-        );
-      });
-      dispatch(setUsers(filteredUsers));
-
       // Fetch conversations
       const conversationsResponse = await axios.get(
         `http://localhost:3000/chat/messages/${id}`
       );
-      dispatch(setConversations(conversationsResponse.data));
+      const conversations = conversationsResponse.data;
+      dispatch(setConversations(conversations));
+
+      // Collect all user IDs from the conversations
+      const userIds = new Set(
+        conversations.flatMap((conversation: Conversation) => [
+          conversation.user1Id,
+          conversation.user2Id,
+        ])
+      );
+
+      // Fetch all users involved in the conversations
+      const usersResponse = await axios.get("http://localhost:3000/user/users");
+      const allUsers = usersResponse.data.filter((user: User) =>
+        userIds.has(user.id)
+      );
+      dispatch(setUsers(allUsers));
+
+      setIsLoading(false); // Set loading to false after data is fetched
     } catch (error) {
       console.error("Error fetching initial data:", error);
+      setIsLoading(false); // Ensure loading is stopped even on error
     }
   };
 
+  // Fetch data once on component mount
   useEffect(() => {
     fetchInitialData();
+  }, []);
 
-    // Listen for real-time updates
+  useEffect(() => {
+    // console.log("Users:", users);
+    // console.log("Conversations:", conversations);
+  }, [users, conversations]); // Runs whenever users or conversations change
+
+  // Handle real-time updates
+  useEffect(() => {
     socket.on("newMessage", (newMessage) => {
       const updatedConversations = conversations.map((conversation) => {
         if (conversation.id === newMessage.conversationId) {
@@ -66,6 +83,7 @@ const Sidebar = () => {
             ...conversation,
             lastMessage: newMessage.message,
             timestamp: newMessage.timestamp,
+            isUnread: true, // Mark as unread
           };
         }
         return conversation;
@@ -76,7 +94,7 @@ const Sidebar = () => {
     return () => {
       socket.off("newMessage");
     };
-  }, [dispatch, conversations]);
+  }, [dispatch, conversations]); // Only re-run when conversations change
 
   const handleCreateConversation = async (selectedUser: User) => {
     try {
@@ -96,6 +114,10 @@ const Sidebar = () => {
       console.error("Error creating conversation:", error);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Show a loading indicator while data is being fetched
+  }
 
   return (
     <aside className="w-full h-full flex flex-col bg-slate-800 bg-whatsapp">
